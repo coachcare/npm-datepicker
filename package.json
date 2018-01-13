@@ -1,34 +1,61 @@
 {
-  "name": "ccr-datepicker",
-  "version": "0.0.0",
-  "license": "MIT",
+  "$schema": "./node_modules/ng-packagr/package.schema.json",
+  "name": "@coachcare/datepicker",
+  "version": "0.1.0",
+  "description": "Angular Material Datepicker Fork with Timepicker by CoachCare",
+  "keywords": [
+    "coachcare",
+    "frontend",
+    "datepicker"
+  ],
+  "author": "CoachCare.com",
+  "homepage": "https://www.coachcare.com",
+  "license": "UNLICENSED",
+  "private": true,
+  "repository": "github:selvera/npm-datepicker",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --prod",
-    "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
+    "build": "ng-packagr -p package.json",
+    "lint": "ng lint"
   },
-  "private": true,
   "dependencies": {
-    "@angular/animations": "^5.0.0",
-    "@angular/common": "^5.0.0",
-    "@angular/compiler": "^5.0.0",
-    "@angular/core": "^5.0.0",
-    "@angular/forms": "^5.0.0",
-    "@angular/http": "^5.0.0",
-    "@angular/platform-browser": "^5.0.0",
-    "@angular/platform-browser-dynamic": "^5.0.0",
-    "@angular/router": "^5.0.0",
+    "@angular/animations": "~5.1.1",
+    "@angular/cdk": "^5.0.4",
+    "@angular/common": "~5.1.1",
+    "@angular/compiler": "~5.1.1",
+    "@angular/core": "~5.1.1",
+    "@angular/forms": "~5.1.1",
+    "@angular/http": "~5.1.1",
+    "@angular/material": "^5.0.4",
+    "@angular/platform-browser": "~5.1.1",
+    "@angular/platform-browser-dynamic": "~5.1.1",
+    "@angular/router": "~5.1.1",
     "core-js": "^2.4.1",
+    "moment": ">= 2.18.1",
+    "moment-timezone": ">= 0.5.14",
+    "ng-packagr": "github:selvera/ng-packagr#customized",
     "rxjs": "^5.5.2",
     "zone.js": "^0.8.14"
   },
   "devDependencies": {
     "@angular/cli": "1.6.0",
-    "@angular/compiler-cli": "^5.0.0",
-    "@angular/language-service": "^5.0.0",
+    "@angular/compiler-cli": "~5.1.1",
+    "@angular/language-service": "~5.1.1",
+    "tslint": "~5.9.0",
     "typescript": "~2.4.2"
+  },
+  "ngPackage": {
+    "dest": "./dist",
+    "lib": {
+      "entryFile": "./src/datepicker/index.ts",
+      "externals": {
+        "@angular/cdk": "ng.cdk",
+        "@angular/material": "ng.material",
+        "lodash": "lodash",
+        "moment": "moment",
+        "moment-timezone": "moment-timezone"
+      }
+    }
   }
 }
