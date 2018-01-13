@@ -1,0 +1,19 @@
+{
+  "editor.formatOnPaste": false,
+  "editor.formatOnSave": true,
+  "editor.minimap.enabled": false,
+  "editor.minimap.renderCharacters": false,
+  "beautify.ignore": ["html", "json"],
+  "json.format.enable": false,
+  "html.format.enable": false,
+  "html.format.wrapLineLength": 80,
+  "prettier.disableLanguages": ["json"],
+  "prettier.eslintIntegration": false,
+  "prettier.printWidth": 90,
+  "prettier.semi": true,
+  "prettier.singleQuote": true,
+  "prettier.tabWidth": 2,
+  "prettier.trailingComma": "none",
+  "prettier.useTabs": false,
+  "tslint.autoFixOnSave": true
+}
