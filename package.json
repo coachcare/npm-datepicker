@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/ng-packagr/package.schema.json",
   "name": "@coachcare/datepicker",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Angular Material Datepicker Fork with Timepicker by CoachCare",
   "keywords": [
     "coachcare",
@@ -11,7 +11,6 @@
   "author": "CoachCare.com",
   "homepage": "https://www.coachcare.com",
   "license": "UNLICENSED",
-  "private": true,
   "repository": "github:selvera/npm-datepicker",
   "bugs": {
     "url": "https://github.com/selvera/npm-datepicker/issues"
@@ -23,35 +22,43 @@
     "lint": "ng lint",
     "prerelease": "yarn build",
     "release": "standard-version --message 'release: v%s'",
-    "postrelease": "node ./scripts/prepublish.js"
+    "postrelease": "git push --follow-tags origin master",
+    "prepublish": "node ./scripts/prepublish.js",
+    "publish": "npm publish --access=public dist/"
   },
-  "dependencies": {
+  "devDependencies": {
     "@angular/animations": "~5.1.1",
     "@angular/cdk": "^5.0.4",
+    "@angular/cli": "1.6.0",
     "@angular/common": "~5.1.1",
     "@angular/compiler": "~5.1.1",
+    "@angular/compiler-cli": "~5.1.1",
     "@angular/core": "~5.1.1",
     "@angular/forms": "~5.1.1",
     "@angular/http": "~5.1.1",
+    "@angular/language-service": "~5.1.1",
     "@angular/material": "^5.0.4",
     "@angular/platform-browser": "~5.1.1",
     "@angular/platform-browser-dynamic": "~5.1.1",
     "@angular/router": "~5.1.1",
     "core-js": "^2.4.1",
+    "cpx": "^1.5.0",
+    "fs-extra": "^5.0.0",
     "moment": ">= 2.18.1",
     "moment-timezone": ">= 0.5.14",
     "ng-packagr": "github:selvera/ng-packagr#customized",
-    "rxjs": "^5.5.2",
-    "zone.js": "^0.8.14"
-  },
-  "devDependencies": {
-    "@angular/cli": "1.6.0",
-    "@angular/compiler-cli": "~5.1.1",
-    "@angular/language-service": "~5.1.1",
     "rimraf": "^2.6.2",
+    "rxjs": "^5.5.2",
     "standard-version": "^4.3.0",
     "tslint": "~5.9.0",
-    "typescript": "~2.4.2"
+    "typescript": "~2.4.2",
+    "zone.js": "^0.8.14"
+  },
+  "peerDependencies": {
+    "@angular/cdk": "*",
+    "@angular/material": "*",
+    "moment": "*",
+    "moment-timezone": "*"
   },
   "ngPackage": {
     "dest": "./dist",
@@ -60,7 +67,7 @@
       "externals": {
         "@angular/cdk": "ng.cdk",
         "@angular/material": "ng.material",
-        "lodash": "lodash",
+        "lodash": "_",
         "moment": "moment",
         "moment-timezone": "moment-timezone"
       }
