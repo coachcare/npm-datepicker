@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/ng-packagr/package.schema.json",
   "name": "@coachcare/datepicker",
-  "version": "0.1.0",
+  "version": "0.0.2",
   "description": "Angular Material Datepicker Fork with Timepicker by CoachCare",
   "keywords": [
     "coachcare",
@@ -13,11 +13,17 @@
   "license": "UNLICENSED",
   "private": true,
   "repository": "github:selvera/npm-datepicker",
+  "bugs": {
+    "url": "https://github.com/selvera/npm-datepicker/issues"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng-packagr -p package.json",
-    "lint": "ng lint"
+    "build": "rimraf dist && ng-packagr -p package.json",
+    "lint": "ng lint",
+    "prerelease": "yarn build",
+    "release": "standard-version --message 'release: v%s'",
+    "postrelease": "node ./scripts/prepublish.js"
   },
   "dependencies": {
     "@angular/animations": "~5.1.1",
@@ -42,6 +48,8 @@
     "@angular/cli": "1.6.0",
     "@angular/compiler-cli": "~5.1.1",
     "@angular/language-service": "~5.1.1",
+    "rimraf": "^2.6.2",
+    "standard-version": "^4.3.0",
     "tslint": "~5.9.0",
     "typescript": "~2.4.2"
   },
@@ -57,5 +65,13 @@
         "moment-timezone": "moment-timezone"
       }
     }
-  }
+  },
+  "main": "dist/bundles/coachcare-datepicker.umd.js",
+  "module": "dist/esm5/coachcare-datepicker.js",
+  "es2015": "dist/esm2015/coachcare-datepicker.js",
+  "typings": "dist/coachcare-datepicker.d.ts",
+  "metadata": "dist/coachcare-datepicker.metadata.json",
+  "files": [
+    "dist"
+  ]
 }
