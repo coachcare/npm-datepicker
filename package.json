@@ -20,11 +20,11 @@
     "start": "ng serve",
     "build": "rimraf dist && ng-packagr -p package.json",
     "lint": "ng lint",
-    "prerelease": "yarn build",
+    "prerelease": "npm run build",
     "release": "standard-version --message 'release: v%s'",
     "postrelease": "git push --follow-tags origin master",
-    "prepublish": "node ./scripts/prepublish.js",
-    "publish": "npm publish --access=public dist/"
+    "preupload": "node ./scripts/prepublish.js",
+    "upload": "npm publish --access=public dist/"
   },
   "devDependencies": {
     "@angular/animations": "~5.1.1",
