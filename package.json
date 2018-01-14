@@ -1,7 +1,7 @@
 {
-  "$schema": "./node_modules/ng-packagr/package.schema.json",
+  "$schema": "./node_modules/ng-packagr/dist/package.schema.json",
   "name": "@coachcare/datepicker",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Angular Material Datepicker Fork with Timepicker by CoachCare",
   "keywords": [
     "coachcare",
@@ -19,9 +19,10 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "rimraf dist && ng-packagr -p package.json",
+    "commitmsg": "commitlint -e",
     "lint": "ng lint",
     "prerelease": "npm run build",
-    "release": "standard-version --message 'release: v%s'",
+    "release": "standard-version --message 'build: release v%s'",
     "postrelease": "git push --follow-tags origin master",
     "preupload": "node ./scripts/prepublish.js",
     "upload": "npm publish --access=public dist/"
@@ -41,6 +42,8 @@
     "@angular/platform-browser": "~5.1.1",
     "@angular/platform-browser-dynamic": "~5.1.1",
     "@angular/router": "~5.1.1",
+    "@commitlint/cli": "^5.0.0",
+    "@commitlint/config-angular": "^5.0.0",
     "core-js": "^2.4.1",
     "cpx": "^1.5.0",
     "fs-extra": "^5.0.0",
