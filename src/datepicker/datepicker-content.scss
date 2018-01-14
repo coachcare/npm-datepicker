@@ -1,0 +1,94 @@
+@import '~@angular/material/theming';
+
+$mat-datepicker-calendar-padding: 8px;
+$mat-datepicker-non-touch-calendar-cell-size: 40px;
+$mat-datepicker-non-touch-calendar-width: $mat-datepicker-non-touch-calendar-cell-size * 7 +
+  $mat-datepicker-calendar-padding * 2;
+// Based on the natural height of the calendar in a month with 6 rows of dates
+// (largest the calendar will get).
+$mat-datepicker-non-touch-calendar-height: 354px;
+
+// Ideally the calendar would have a constant aspect ratio, no matter its size, and we would base
+// these measurements off the aspect ratio. Unfortunately, the aspect ratio does change a little as
+// the calendar grows, since some of the elements have pixel-based sizes. These numbers have been
+// chosen to minimize extra whitespace at larger sizes, while still ensuring we won't need
+// scrollbars at smaller sizes.
+$mat-datepicker-touch-landscape-width: 132vh;
+$mat-datepicker-touch-landscape-height: 90vh;
+$mat-datepicker-touch-landscape-header: 53vh;
+$mat-datepicker-touch-portrait-width: 80vw;
+$mat-datepicker-touch-portrait-height: 112vw;
+$mat-datepicker-touch-portrait-header: 33vw;
+
+$mat-datepicker-touch-landscape-max-width: 500px;
+$mat-datepicker-touch-landscape-max-height: 325px;
+$mat-datepicker-touch-landscape-max-header: 150px;
+$mat-datepicker-touch-portrait-max-width: 275px;
+$mat-datepicker-touch-portrait-max-height: 580px;
+$mat-datepicker-touch-portrait-max-header: 115px;
+
+.mat-datepicker-content {
+  @include mat-elevation(5);
+
+  display: block;
+}
+
+.mat-calendar {
+  display: flex;
+}
+
+// .mat-datepicker-content:not(.mat-datepicker-content-touch) .mat-calendar {
+//   width: $mat-datepicker-non-touch-calendar-width;
+//   height: $mat-datepicker-non-touch-calendar-height;
+// }
+
+.mat-datepicker-content-touch {
+  @include mat-elevation(0);
+
+  // make sure the dialog scrolls rather than being cropped on ludicrously small screens
+  max-height: 90vh;
+  overflow: auto;
+
+  // TODO(mmalerba): hack to offset the padding of the dialog. Can be removed when we switch away
+  // from using dialog.
+  margin: -24px;
+}
+
+@media all and (orientation: landscape) {
+  .mat-calendar {
+    width: $mat-datepicker-touch-landscape-width;
+    height: $mat-datepicker-touch-landscape-height;
+
+    max-width: $mat-datepicker-touch-landscape-max-width;
+    max-height: $mat-datepicker-touch-landscape-max-height;
+
+    .mat-calendar-header {
+      width: $mat-datepicker-touch-landscape-header;
+      max-width: $mat-datepicker-touch-landscape-max-header;
+    }
+    .mat-calendar-content {
+      flex: 1 1 100%;
+    }
+  }
+}
+
+@media all and (orientation: portrait) {
+  .mat-calendar {
+    width: $mat-datepicker-touch-portrait-width;
+    height: $mat-datepicker-touch-portrait-height;
+
+    max-width: $mat-datepicker-touch-portrait-max-width;
+    max-height: $mat-datepicker-touch-portrait-max-height;
+
+    flex-direction: column;
+    align-items: stretch;
+
+    .mat-calendar-header {
+      height: $mat-datepicker-touch-portrait-header;
+      max-height: $mat-datepicker-touch-portrait-max-header;
+    }
+    .mat-calendar-content {
+      flex: 1 1 100%;
+    }
+  }
+}

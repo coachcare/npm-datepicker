@@ -1,0 +1,312 @@
+import {
+  AfterContentInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Inject,
+  Input,
+  Optional,
+  Output
+} from '@angular/core';
+import * as moment from 'moment-timezone';
+import { coerceDateProperty } from './coerce-date-property';
+import { MAT_DATE_FORMATS, MatDateFormats } from './core';
+import { DateAdapter } from './core';
+
+export const CLOCK_RADIUS = 50;
+export const CLOCK_INNER_RADIUS = 27.5;
+export const CLOCK_OUTER_RADIUS = 41.25;
+export const CLOCK_TICK_RADIUS = 7.0833;
+
+export type ClockView = 'hour' | 'minute';
+export type Moment = moment.Moment;
+
+function createMissingDateImplError(provider: string) {
+  return Error(
+    `MdDatepicker: No provider found for ${provider}. You must import one of the following ` +
+      `modules at your application root: MdNativeDateModule, or provide a custom implementation.`
+  );
+}
+
+/**
+ * A clock that is used as part of the datepicker.
+ */
+@Component({
+  selector: 'mat-clock-view',
+  templateUrl: 'clock-view.html',
+  // styleUrls: ['clock-view.scss'],
+  preserveWhitespaces: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    role: 'clock',
+    '(mousedown)': '_handleMousedown($event)'
+  }
+})
+export class MatClockView<D> implements AfterContentInit {
+  // The date to display in this clock view. (the rest is ignored)
+  @Input()
+  get activeDate(): D {
+    return this._activeDate;
+  }
+  set activeDate(value: D) {
+    const oldActiveDate = this._activeDate;
+    this._activeDate =
+      coerceDateProperty(this._dateAdapter, value) || this._dateAdapter.today();
+
+    if (
+      oldActiveDate &&
+      this._dateAdapter.compareDate(oldActiveDate, this._activeDate, 'minute')
+    ) {
+      this._init();
+    }
+  }
+  private _activeDate: D;
+
+  // The currently selected date.
+  @Input()
+  get selected(): D | null {
+    return this._selected;
+  }
+  set selected(value: D | null) {
+    this._selected = coerceDateProperty(this._dateAdapter, value);
+  }
+  private _selected: D | null;
+
+  // A function used to filter which dates are selectable.
+  @Input() dateFilter: (date: D, unit?: string) => boolean;
+
+  @Input() clockStep = 1;
+
+  @Input() twelveHour = false;
+
+  // Emits when the final time was selected.
+  @Output() selectedTime = new EventEmitter<D>();
+
+  // Emits when the currently selected date changes.
+  @Output() selectedChange = new EventEmitter<D>();
+
+  // Emits when the currently selected date changes.
+  @Output() changeView = new EventEmitter<void>();
+
+  // Hours and Minutes representing the clock view.
+  _hours: Array<any> = [];
+  _minutes: Array<any> = [];
+
+  // Whether the clock is in hour view.
+  @Input() hourView: boolean = true;
+
+  _selectedHour: number | null;
+  _selectedMinute: number | null;
+  _anteMeridian: boolean;
+
+  private mouseMoveListener: any;
+  private mouseUpListener: any;
+
+  get _hand(): any {
+    this._selectedHour = this._dateAdapter.getHours(this.activeDate);
+    this._selectedMinute = this._dateAdapter.getMinutes(this.activeDate);
+    let radius = CLOCK_OUTER_RADIUS;
+    let deg = 0;
+
+    if (this.twelveHour) {
+      this._selectedHour =
+        this._selectedHour < 12 ? this._selectedHour : this._selectedHour - 12;
+      this._selectedHour = this._selectedHour === 0 ? 12 : this._selectedHour;
+    }
+
+    if (this.hourView) {
+      const outer = this._selectedHour > 0 && this._selectedHour < 13;
+      radius = outer ? CLOCK_OUTER_RADIUS : CLOCK_INNER_RADIUS;
+      if (this.twelveHour) {
+        radius = CLOCK_OUTER_RADIUS;
+      }
+      deg = Math.round(this._selectedHour * (360 / (24 / 2)));
+    } else {
+      deg = Math.round(this._selectedMinute * (360 / 60));
+    }
+
+    return {
+      transform: `rotate(${deg}deg)`,
+      height: `${radius}%`,
+      'margin-top': `${50 - radius}%`
+    };
+  }
+
+  constructor(
+    private _element: ElementRef,
+    @Optional() public _dateAdapter: DateAdapter<D>,
+    @Optional()
+    @Inject(MAT_DATE_FORMATS)
+    private _dateFormats: MatDateFormats,
+    private _changeDetectorRef: ChangeDetectorRef
+  ) {
+    if (!this._dateAdapter) {
+      throw createMissingDateImplError('DateAdapter');
+    }
+    if (!this._dateFormats) {
+      throw createMissingDateImplError('MAT_DATE_FORMATS');
+    }
+
+    this.mouseMoveListener = (event: any) => {
+      this._handleMousemove(event);
+    };
+    this.mouseUpListener = () => {
+      this._handleMouseup();
+    };
+  }
+
+  ngAfterContentInit() {
+    this._init();
+  }
+
+  // Handles mousedown events on the clock body.
+  _handleMousedown(event: any) {
+    this.setTime(event);
+    document.addEventListener('mousemove', this.mouseMoveListener);
+    document.addEventListener('touchmove', this.mouseMoveListener);
+    document.addEventListener('mouseup', this.mouseUpListener);
+    document.addEventListener('touchend', this.mouseUpListener);
+  }
+
+  _handleMousemove(event: any) {
+    event.preventDefault();
+    this.setTime(event);
+  }
+
+  _handleMouseup() {
+    document.removeEventListener('mousemove', this.mouseMoveListener);
+    document.removeEventListener('touchmove', this.mouseMoveListener);
+    document.removeEventListener('mouseup', this.mouseUpListener);
+    document.removeEventListener('touchend', this.mouseUpListener);
+  }
+
+  // Initializes this clock view.
+  _init() {
+    this._hours.length = 0;
+    this._minutes.length = 0;
+
+    const hourNames = this._dateAdapter.getHourNames();
+    const minuteNames = this._dateAdapter.getMinuteNames();
+
+    if (this.twelveHour) {
+      this._anteMeridian = this._dateAdapter.getHours(this.activeDate) < 12;
+
+      for (let i = 0; i < hourNames.length / 2; i++) {
+        const radian = i / 6 * Math.PI;
+        const radius = CLOCK_OUTER_RADIUS;
+        const date = this._dateAdapter.createDate(
+          this._dateAdapter.getYear(this.activeDate),
+          this._dateAdapter.getMonth(this.activeDate),
+          this._dateAdapter.getDate(this.activeDate),
+          this._anteMeridian ? i : i + 12
+        );
+        this._hours.push({
+          value: i,
+          displayValue: i === 0 ? '12' : hourNames[i],
+          enabled: !this.dateFilter || this.dateFilter(date, 'hour'),
+          top: CLOCK_RADIUS - Math.cos(radian) * radius - CLOCK_TICK_RADIUS,
+          left: CLOCK_RADIUS + Math.sin(radian) * radius - CLOCK_TICK_RADIUS
+        });
+      }
+    } else {
+      for (let i = 0; i < hourNames.length; i++) {
+        const radian = i / 6 * Math.PI;
+        const outer = i > 0 && i < 13;
+        const radius = outer ? CLOCK_OUTER_RADIUS : CLOCK_INNER_RADIUS;
+        const date = this._dateAdapter.createDate(
+          this._dateAdapter.getYear(this.activeDate),
+          this._dateAdapter.getMonth(this.activeDate),
+          this._dateAdapter.getDate(this.activeDate),
+          i
+        );
+        this._hours.push({
+          value: i,
+          displayValue: i === 0 ? '12' : hourNames[i],
+          enabled: !this.dateFilter || this.dateFilter(date, 'hour'),
+          top: CLOCK_RADIUS - Math.cos(radian) * radius - CLOCK_TICK_RADIUS,
+          left: CLOCK_RADIUS + Math.sin(radian) * radius - CLOCK_TICK_RADIUS,
+          fontSize: i > 0 && i < 13 ? '' : '80%'
+        });
+      }
+    }
+
+    for (let i = 0; i < minuteNames.length; i += 5) {
+      const radian = i / 30 * Math.PI;
+      const date = this._dateAdapter.createDate(
+        this._dateAdapter.getYear(this.activeDate),
+        this._dateAdapter.getMonth(this.activeDate),
+        this._dateAdapter.getDate(this.activeDate),
+        this._dateAdapter.getHours(this.activeDate),
+        i
+      );
+      this._minutes.push({
+        value: i,
+        displayValue: i === 0 ? '00' : minuteNames[i],
+        enabled: !this.dateFilter || this.dateFilter(date, 'minute'),
+        top: CLOCK_RADIUS - Math.cos(radian) * CLOCK_OUTER_RADIUS - CLOCK_TICK_RADIUS,
+        left: CLOCK_RADIUS + Math.sin(radian) * CLOCK_OUTER_RADIUS - CLOCK_TICK_RADIUS
+      });
+    }
+
+    this._changeDetectorRef.markForCheck();
+  }
+
+  // Set Time
+  private setTime(event: any) {
+    const trigger = this._element.nativeElement;
+    const triggerRect = trigger.getBoundingClientRect();
+    const width = trigger.offsetWidth;
+    const height = trigger.offsetHeight;
+    const pageX = event.pageX !== undefined ? event.pageX : event.touches[0].pageX;
+    const pageY = event.pageY !== undefined ? event.pageY : event.touches[0].pageY;
+    const x = width / 2 - (pageX - triggerRect.left - window.pageXOffset);
+    const y = height / 2 - (pageY - triggerRect.top - window.pageYOffset);
+    const unit =
+      Math.PI / (this.hourView ? 6 : this.clockStep ? 30 / this.clockStep : 30);
+    const z = Math.sqrt(x * x + y * y);
+    const outer =
+      this.hourView &&
+      z > (width * (CLOCK_OUTER_RADIUS / 100) + width * (CLOCK_INNER_RADIUS / 100)) / 2;
+
+    let radian = Math.atan2(-x, y);
+    if (radian < 0) {
+      radian = Math.PI * 2 + radian;
+    }
+    let value = Math.round(radian / unit);
+
+    const date = this._dateAdapter.clone(this.activeDate);
+
+    if (this.hourView) {
+      if (value === 12) {
+        value = 0;
+      }
+      value = this.twelveHour
+        ? this._anteMeridian ? value : value + 12
+        : outer ? (value === 0 ? 12 : value) : value === 0 ? 0 : value + 12;
+      this._dateAdapter.setHours(date, value);
+    } else {
+      if (this.clockStep) {
+        value *= this.clockStep;
+      }
+      if (value === 60) {
+        value = 0;
+      }
+      this._dateAdapter.setMinutes(date, value);
+    }
+
+    // validate if the resulting value is disabled and do not take action
+    if (this.dateFilter && !this.dateFilter(date, this.hourView ? 'hour' : 'minute')) {
+      return;
+    }
+
+    this.activeDate = date;
+    if (this.hourView) {
+      this.changeView.emit();
+      this.selectedChange.emit(this.activeDate);
+    } else {
+      this.selectedTime.emit(this.activeDate);
+    }
+  }
+}

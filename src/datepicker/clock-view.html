@@ -1,0 +1,27 @@
+﻿<div class="mat-clock">
+  <div class="mat-clock-center"></div>
+  <div class="mat-clock-hand" [ngStyle]="_hand"></div>
+
+  <div class="mat-clock-hours" [class.active]="hourView">
+    <div *ngFor="let item of _hours"
+      class="mat-clock-cell"
+      [class.mat-clock-cell-selected]="_selectedHour == item.value"
+      [class.mat-clock-cell-disabled]="!item.enabled"
+      [style.top.%]="item.top"
+      [style.left.%]="item.left"
+      [style.fontSize]="item.fontSize">
+      {{ item.displayValue }}
+    </div>
+  </div>
+
+  <div class="mat-clock-minutes" [class.active]="!hourView">
+    <div *ngFor="let item of _minutes"
+      class="mat-clock-cell"
+      [class.mat-clock-cell-selected]="_selectedMinute == item.value"
+      [class.mat-clock-cell-disabled]="!item.enabled"
+      [style.top.%]="item.top"
+      [style.left.%]="item.left">
+      {{ item.displayValue }}
+    </div>
+  </div>
+</div>

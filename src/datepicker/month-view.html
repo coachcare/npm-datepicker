@@ -1,0 +1,16 @@
+<table class="mat-calendar-table">
+  <thead class="mat-calendar-table-header">
+    <tr><th *ngFor="let day of _weekdays" [attr.aria-label]="day.long">{{ day.narrow }}</th></tr>
+  </thead>
+  <tbody mat-calendar-body
+         [@slideCalendar]="animationDir"
+         role="grid"
+         [rows]="_weeks"
+         [todayValue]="_todayDate"
+         [activeValue]="_activeValue"
+         [selectedValue]="_selectedDate"
+         [labelMinRequiredCells]="3"
+         [activeCell]="_dateAdapter.getDate(activeDate) - 1"
+         (selectedValueChange)="_dateSelected($event)">
+  </tbody>
+</table>

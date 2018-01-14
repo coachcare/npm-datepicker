@@ -1,0 +1,124 @@
+@mixin mat-calendar-body($theme) {
+  $primary: map-get($theme, primary);
+
+  $mat-calendar-body-label-padding-start: 5% !default;
+  // We don't want the label to jump around when we switch between month and year views, so we use
+  // the same amount of padding regardless of the number of columns. We align the header label with
+  // the one third mark of the first cell, this was chosen somewhat arbitrarily to make it look
+  // roughly like the mock. Half way is too far since the cell text is center aligned.
+  $mat-calendar-body-label-side-padding: 33% / 7 !default;
+  $mat-calendar-body-cell-min-size: 32px !default;
+  $mat-calendar-body-cell-content-margin: 5% !default;
+  $mat-calendar-body-cell-content-border-width: 1px !default;
+
+  $mat-calendar-body-min-size: 7 * $mat-calendar-body-cell-min-size !default;
+  $mat-calendar-body-cell-content-size: 100% - $mat-calendar-body-cell-content-margin
+    !default;
+
+  .mat-calendar-body {
+    min-width: $mat-calendar-body-min-size;
+  }
+
+  .mat-calendar-body-label {
+    height: 0;
+    line-height: 0;
+    text-align: left;
+    padding-left: $mat-calendar-body-label-side-padding;
+    padding-right: $mat-calendar-body-label-side-padding;
+  }
+
+  [dir='rtl'] {
+    .mat-calendar-body-label {
+      text-align: right;
+    }
+  }
+
+  .mat-calendar-body-cell {
+    position: relative;
+    height: 0;
+    line-height: 0;
+    text-align: center;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .mat-calendar-body-cell-background {
+    position: absolute;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
+    opacity: 0;
+
+    border-width: $mat-calendar-body-cell-content-border-width;
+    border-style: solid;
+
+    transform: scale(0);
+    transition: all 350ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+
+    // Choosing a value clearly larger than the height ensures we get the correct capsule shape.
+    border-radius: 999px;
+  }
+
+  // Square background
+  @media all and (orientation: portrait) {
+    .mat-calendar-body-cell-background {
+      top: 50%;
+      left: $mat-calendar-body-cell-content-margin;
+      margin-top: -$mat-calendar-body-cell-content-size / 2;
+
+      padding-bottom: $mat-calendar-body-cell-content-size;
+      width: $mat-calendar-body-cell-content-size;
+    }
+  }
+  @media all and (orientation: landscape) {
+    .mat-calendar-body-cell-background {
+      top: $mat-calendar-body-cell-content-margin;
+      left: 50%;
+      margin-left: -$mat-calendar-body-cell-content-size / 3 - 2;
+
+      padding-left: $mat-calendar-body-cell-content-size / 3;
+      padding-right: $mat-calendar-body-cell-content-size / 3;
+      height: $mat-calendar-body-cell-content-size - $mat-calendar-body-cell-content-margin;
+    }
+  }
+
+  .mat-calendar-body-cell:hover:not(.mat-calendar-body-disabled) {
+    .mat-calendar-body-cell-background {
+      background: mat-color($primary, 0.5);
+      color: mat-color($primary, 0.5);
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .mat-calendar-body-active,
+  .mat-calendar-body-selected,
+  .mat-calendar-body-today {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .mat-calendar-body-selected {
+    background: mat-color($primary, 0.8);
+    color: mat-color($primary, 0.8);
+  }
+
+  .mat-calendar-body-active:not(.mat-calendar-body-today) {
+    color: mat-color($primary, 0.5);
+  }
+
+  .mat-calendar-body-disabled {
+    cursor: default;
+  }
+
+  .mat-calendar-body-cell-content {
+    font-weight: 400;
+    position: relative;
+
+    // Prevents text being off-center on Android.
+    line-height: 1;
+  }
+}

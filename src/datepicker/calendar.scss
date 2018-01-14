@@ -1,0 +1,370 @@
+$mat-calendar-padding: 8px !default;
+
+$mat-calendar-arrow-size: 5px !default;
+$mat-calendar-arrow-disabled-opacity: 0.5 !default;
+
+// Values chosen to approximate https://material.io/icons/#ic_navigate_before and
+// https://material.io/icons/#ic_navigate_next as closely as possible.
+$mat-calendar-prev-next-icon-border-width: 2px;
+$mat-calendar-prev-next-icon-margin: 10.5px;
+$mat-calendar-prev-icon-transform: translateX(2px) rotate(-45deg);
+$mat-calendar-next-icon-transform: translateX(-2px) rotate(45deg);
+
+$mat-calendar-controls-opacity: 0.6;
+
+@mixin mat-fill {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+}
+
+@mixin mat-calendar($theme) {
+  $primary: map-get($theme, primary);
+  $foreground: map-get($theme, foreground);
+
+  .mat-calendar {
+    font-size: 15px;
+    user-select: none;
+
+    .mat-calendar-control {
+      background: transparent;
+      border: 0;
+      box-sizing: border-box;
+      color: inherit;
+      cursor: pointer;
+      font-family: inherit;
+      line-height: 1;
+      opacity: $mat-calendar-controls-opacity;
+      outline: none;
+      padding: 0;
+    }
+    .mat-calendar-control-active {
+      opacity: 1;
+    }
+
+    .mat-calendar-header {
+      background-color: mat-color($primary);
+      color: mat-color($primary, default-contrast);
+      display: flex;
+
+      .mat-calendar-header-date {
+        .mat-calendar-header-date-year {
+          display: block;
+          font-weight: 500;
+          font-size: 16px;
+          line-height: 16px;
+
+          &.mat-calendar-control-active {
+            font-weight: bold;
+          }
+        }
+        .mat-calendar-header-date-month {
+          font-weight: 500;
+          text-align: left;
+        }
+      }
+
+      .mat-calendar-header-time {
+        display: flex;
+
+        .mat-calendar-header-time-hour {
+          display: flex;
+          font-size: 56px;
+          line-height: 56px;
+          span {
+            opacity: $mat-calendar-controls-opacity;
+          }
+        }
+        .mat-calendar-header-time-ampm {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          place-content: center;
+
+          button {
+            display: block;
+            font-size: 17px;
+            font-weight: 500;
+            line-height: 22px;
+          }
+        }
+      }
+    }
+
+    .mat-calendar-content {
+      overflow: hidden;
+      padding: $mat-calendar-padding;
+
+      .mat-calendar-main {
+        height: calc(100% - 37px);
+      }
+      &.mat-calendar-view-clock {
+        .mat-calendar-main {
+          height: calc(100% - 46px);
+        }
+      }
+      &.mat-calendar-view-month,
+      &.mat-calendar-view-year {
+        .mat-calendar-main {
+          height: calc(100% - 37px - 38px);
+        }
+      }
+    }
+
+    .mat-calendar-footer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      padding: 7px 0;
+      text-align: end;
+
+      .mat-button {
+        line-height: 32px;
+        min-width: 60px;
+        text-transform: uppercase;
+      }
+    }
+  }
+
+  @media all and (orientation: portrait) {
+    .mat-calendar {
+      .mat-calendar-header {
+        align-items: flex-start;
+        place-content: flex-start space-between;
+        padding: 0 6%;
+
+        .mat-calendar-header-date {
+          height: 100%;
+
+          .mat-calendar-header-date-year {
+            margin-bottom: 3px;
+            margin-top: 18px;
+          }
+          .mat-calendar-header-date-month {
+            font-size: 36px;
+            line-height: 36px;
+          }
+        }
+
+        .mat-calendar-header-time {
+          height: 100%;
+          flex-direction: row;
+          align-items: flex-end;
+          place-content: flex-end;
+
+          .mat-calendar-header-time-hour {
+            flex-direction: row;
+            align-items: flex-end;
+            place-content: flex-end;
+            margin-bottom: 16px;
+          }
+          .mat-calendar-header-time-ampm {
+            margin-bottom: 18px;
+            margin-left: 5px;
+            button {
+              line-height: 18px;
+            }
+          }
+        }
+
+        &.mat-calendar-type-datetime {
+          .mat-calendar-header-date-dayname {
+            display: none;
+          }
+          .mat-calendar-header-time-hour {
+            font-size: 36px;
+            line-height: 42px;
+          }
+        }
+      }
+
+      .mat-calendar-type-time {
+        align-items: center;
+        place-content: center;
+      }
+    }
+  }
+
+  @media all and (orientation: landscape) {
+    .mat-calendar {
+      .mat-calendar-header {
+        align-items: stretch;
+        flex-direction: column;
+        place-content: stretch flex-start;
+        padding: $mat-calendar-padding * 2 0;
+
+        .mat-calendar-header-date {
+          padding: 0 $mat-calendar-padding * 2;
+
+          .mat-calendar-header-date-year {
+            margin-bottom: 3px;
+          }
+          .mat-calendar-header-date-month {
+            font-size: 30px;
+            line-height: 32px;
+            span {
+              display: block;
+            }
+          }
+        }
+
+        .mat-calendar-header-time {
+          align-items: center;
+          place-content: center flex-start;
+          padding: 0 $mat-calendar-padding * 2;
+
+          .mat-calendar-header-time-hour {
+            font-size: 32px;
+            line-height: 40px;
+          }
+          .mat-calendar-header-time-ampm {
+            padding-left: 5px;
+            width: 30px;
+
+            button {
+              font-size: 15px;
+              line-height: 16px;
+            }
+          }
+        }
+      }
+
+      .mat-calendar-type-time {
+        align-items: center;
+        place-content: center;
+
+        .mat-calendar-header-time {
+          flex-direction: column;
+          place-content: center;
+          align-items: center;
+        }
+      }
+    }
+  }
+
+  /** Caledar types customizations */
+  .mat-calendar-type-date {
+    .mat-calendar-header-time {
+      display: none !important;
+    }
+  }
+
+  .mat-calendar-type-time {
+    .mat-calendar-header-date {
+      display: none !important;
+    }
+  }
+
+  /** Heading controls */
+  .mat-calendar-heading {
+    display: flex;
+    align-items: center;
+    place-content: center space-between;
+    padding-top: 7px;
+
+    .mat-calendar-heading-period {
+      flex: 1 1 100%;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .mat-icon-button {
+      line-height: 30px;
+      height: 30px;
+      width: 30px;
+    }
+  }
+
+  .mat-calendar-previous-button,
+  .mat-calendar-next-button {
+    position: relative;
+
+    &::after {
+      @include mat-fill;
+      content: '';
+      margin: $mat-calendar-prev-next-icon-margin;
+      border: 0 solid currentColor;
+      border-top-width: $mat-calendar-prev-next-icon-border-width;
+    }
+
+    [dir='rtl'] & {
+      transform: rotate(180deg);
+    }
+  }
+
+  .mat-calendar-previous-button::after {
+    border-left-width: $mat-calendar-prev-next-icon-border-width;
+    transform: $mat-calendar-prev-icon-transform;
+  }
+
+  .mat-calendar-next-button::after {
+    border-right-width: $mat-calendar-prev-next-icon-border-width;
+    transform: $mat-calendar-next-icon-transform;
+  }
+
+  /** Years view */
+  mat-years-view {
+    display: block;
+    height: 100%;
+    line-height: 35px;
+    overflow-y: scroll;
+    position: relative;
+  }
+
+  .mat-calendar-years {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100%;
+
+    &-item {
+      cursor: pointer;
+      display: block;
+      font-size: 14px;
+      margin: 0 auto;
+
+      &-disabled {
+        color: mat-color($foreground, disabled);
+      }
+      &-active {
+        color: mat-color($primary);
+        font-size: 26px;
+        font-weight: 500;
+      }
+
+      &-diff1 {
+        font-size: 18px;
+      }
+      &-diff2 {
+        font-size: 16px;
+      }
+    }
+  }
+
+  /** Month view */
+  .mat-calendar-table {
+    border-spacing: 0;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  .mat-calendar-table-header th {
+    text-align: center;
+    padding: 9px 0 5px;
+  }
+
+  /** Clock view */
+  .mat-horary-hour-button,
+  .mat-horary-minute-button {
+    font-size: 36px;
+    min-width: auto;
+    padding: 0;
+    position: relative;
+
+    [dir='rtl'] & {
+      transform: rotate(180deg);
+    }
+  }
+}

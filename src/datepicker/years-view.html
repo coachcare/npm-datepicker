@@ -1,0 +1,9 @@
+<div class="mat-calendar-years">
+  <span *ngFor="let year of _years"
+  [class]="'mat-calendar-years-item mat-calendar-years-item-diff' + abs(year.value - _selectedYear)"
+  [class.mat-calendar-years-item-active]="year.value === _selectedYear"
+  [class.mat-calendar-years-item-disabled]="!year.enabled"
+  (click)="year.enabled ? _yearSelected(year.value) : null">
+    {{ year.value }}
+  </span>
+</div>
