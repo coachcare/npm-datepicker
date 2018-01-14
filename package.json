@@ -10,7 +10,7 @@
   ],
   "author": "CoachCare.com",
   "homepage": "https://www.coachcare.com",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "repository": "github:selvera/npm-datepicker",
   "bugs": {
     "url": "https://github.com/selvera/npm-datepicker/issues"
@@ -21,10 +21,9 @@
     "build": "rimraf dist && ng-packagr -p package.json",
     "commitmsg": "commitlint -e",
     "lint": "ng lint",
-    "prerelease": "npm run build",
+    "prerelease": "npm run build && node ./scripts/prerelease.js",
     "release": "standard-version --message 'build: release v%s'",
     "postrelease": "git push --follow-tags origin master",
-    "preupload": "node ./scripts/prepublish.js",
     "upload": "npm publish --access=public dist/"
   },
   "devDependencies": {
