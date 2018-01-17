@@ -9,8 +9,9 @@
 import { Inject, Injectable, Optional } from '@angular/core';
 import { DateAdapter, MAT_DATE_LOCALE } from '../core';
 
-import * as moment from 'moment-timezone';
-type Moment = moment.Moment;
+import * as momentNs from 'moment-timezone';
+export type Moment = momentNs.Moment;
+const moment = momentNs;
 
 /** Creates an array and fills it with values. */
 function range<T>(length: number, valueFunction: (index: number) => T): T[] {

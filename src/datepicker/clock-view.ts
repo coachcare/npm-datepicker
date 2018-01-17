@@ -10,7 +10,6 @@ import {
   Optional,
   Output
 } from '@angular/core';
-import * as moment from 'moment-timezone';
 import { coerceDateProperty } from './coerce-date-property';
 import { MAT_DATE_FORMATS, MatDateFormats } from './core';
 import { DateAdapter } from './core';
@@ -21,7 +20,6 @@ export const CLOCK_OUTER_RADIUS = 41.25;
 export const CLOCK_TICK_RADIUS = 7.0833;
 
 export type ClockView = 'hour' | 'minute';
-export type Moment = moment.Moment;
 
 function createMissingDateImplError(provider: string) {
   return Error(
