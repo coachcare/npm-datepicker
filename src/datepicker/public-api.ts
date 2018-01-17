@@ -18,3 +18,6 @@ export * from './datepicker-toggle';
 export * from './month-view';
 export * from './year-view';
 export * from './years-view';
+
+export * from './core';
+export * from './moment-adapter';
