@@ -20,13 +20,12 @@
     "start": "ng serve",
     "build": "npm run build:pkg && npm run build:scss",
     "build:pkg": "rimraf dist && ng-packagr -p package.json",
-    "build:scss": "scss-bundle -e ./src/datepicker/theming.scss -d ./_theming.scss",
+    "build:scss": "scss-bundle -e ./src/datepicker/theming.scss -d ./dist/_theming.scss",
     "commitmsg": "commitlint -e",
     "lint": "ng lint",
-    "prerelease": "npm run build",
     "release": "standard-version --message 'build: release v%s'",
     "postrelease": "git push --follow-tags origin master",
-    "preupload": "node ./scripts/prepublish.js",
+    "preupload": "npm run build && node ./scripts/prepublish.js",
     "upload": "npm publish --access=public dist/"
   },
   "devDependencies": {

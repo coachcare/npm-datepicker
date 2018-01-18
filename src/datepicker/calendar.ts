@@ -56,7 +56,6 @@ import { MatYearsView } from './years-view';
 @Component({
   selector: 'mat-calendar',
   templateUrl: 'calendar.html',
-  styleUrls: ['calendar.scss'],
   host: {
     class: 'mat-calendar'
   },

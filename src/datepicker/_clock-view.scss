@@ -1,11 +1,11 @@
-$clock-min-size: 224px !default;
-$clock-margin: 8px !default;
-$clock-font-size: 14px !default;
-$clock-cell-size: 14.1666% !default;
-
 @mixin mat-clock($theme) {
   $primary: map-get($theme, primary);
   $foreground: map-get($theme, foreground);
+
+  $clock-min-size: 224px !default;
+  $clock-margin: 8px !default;
+  $clock-font-size: 14px !default;
+  $clock-cell-size: 14.1666% !default;
 
   mat-clock-view {
     position: relative;

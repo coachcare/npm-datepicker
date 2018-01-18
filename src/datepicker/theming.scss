@@ -1,4 +1,12 @@
-@import './datepicker-content';
-@import './calendar';
-@import './calendar-body';
-@import './clock-view';
+@import 'elevation';
+@import 'datepicker-content';
+@import 'calendar';
+@import 'calendar-body';
+@import 'clock-view';
+
+@mixin mat-datepicker($theme) {
+  @include mat-datepicker-content($theme);
+  @include mat-calendar($theme);
+  @include mat-calendar-body($theme);
+  @include mat-clock($theme);
+}
