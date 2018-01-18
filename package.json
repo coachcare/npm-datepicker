@@ -18,7 +18,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "rimraf dist && ng-packagr -p package.json",
+    "build": "npm run build:pkg && npm run build:scss",
+    "build:pkg": "rimraf dist && ng-packagr -p package.json",
+    "build:scss": "scss-bundle -e ./src/datepicker/theming.scss -d ./_theming.scss",
     "commitmsg": "commitlint -e",
     "lint": "ng lint",
     "prerelease": "npm run build",
@@ -53,6 +55,7 @@
     "ng-packagr": "github:selvera/ng-packagr#customized",
     "rimraf": "^2.6.2",
     "rxjs": "^5.5.2",
+    "scss-bundle": "^2.1.1",
     "standard-version": "^4.3.0",
     "tslint": "~5.9.0",
     "typescript": "~2.4.2",

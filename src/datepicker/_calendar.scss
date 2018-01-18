@@ -3,8 +3,10 @@ $mat-calendar-padding: 8px !default;
 $mat-calendar-arrow-size: 5px !default;
 $mat-calendar-arrow-disabled-opacity: 0.5 !default;
 
-// Values chosen to approximate https://material.io/icons/#ic_navigate_before and
-// https://material.io/icons/#ic_navigate_next as closely as possible.
+/**
+ * Values chosen to approximate https://material.io/icons/#ic_navigate_before and
+ * https://material.io/icons/#ic_navigate_next as closely as possible.
+ */
 $mat-calendar-prev-next-icon-border-width: 2px;
 $mat-calendar-prev-next-icon-margin: 10.5px;
 $mat-calendar-prev-icon-transform: translateX(2px) rotate(-45deg);
@@ -244,7 +246,7 @@ $mat-calendar-controls-opacity: 0.6;
     }
   }
 
-  /** Caledar types customizations */
+  /* Caledar types customizations */
   .mat-calendar-type-date {
     .mat-calendar-header-time {
       display: none !important;
@@ -257,7 +259,7 @@ $mat-calendar-controls-opacity: 0.6;
     }
   }
 
-  /** Heading controls */
+  /* Heading controls */
   .mat-calendar-heading {
     display: flex;
     align-items: center;
@@ -304,7 +306,7 @@ $mat-calendar-controls-opacity: 0.6;
     transform: $mat-calendar-next-icon-transform;
   }
 
-  /** Years view */
+  /* Years view */
   mat-years-view {
     display: block;
     height: 100%;
@@ -343,7 +345,7 @@ $mat-calendar-controls-opacity: 0.6;
     }
   }
 
-  /** Month view */
+  /* Month view */
   .mat-calendar-table {
     border-spacing: 0;
     border-collapse: collapse;
@@ -355,7 +357,7 @@ $mat-calendar-controls-opacity: 0.6;
     padding: 9px 0 5px;
   }
 
-  /** Clock view */
+  /* Clock view */
   .mat-horary-hour-button,
   .mat-horary-minute-button {
     font-size: 36px;
