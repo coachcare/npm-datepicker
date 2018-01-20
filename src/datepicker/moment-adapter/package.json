@@ -1,11 +1,16 @@
 {
   "$schema": "../../../node_modules/ng-packagr/dist/package.schema.json",
+  "name": "@coachcare/datepicker/moment-adapter",
+  "main": "../bundles/coachcare-datepicker-moment-adapter.umd.js",
+  "module": "../esm5/coachcare-datepicker-moment-adapter.js",
+  "es2015": "../esm2015/coachcare-datepicker-moment-adapter.js",
+  "typings": "coachcare-datepicker-moment-adapter.d.ts",
+  "metadata": "coachcare-datepicker-moment-adapter.metadata.json",
   "peerDependencies": {
     "@coachcare/datepicker": "*"
   },
   "ngPackage": {
-    "src": "../",
-    "dest": "../../dist/adapter",
+    "dest": "../../dist/moment-adapter",
     "paths": {
       "@coachcare/datepicker": ["../../../dist/"]
     },
