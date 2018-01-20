@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import { MatDateFormats } from '../core';
+import { MatDateFormats } from '@coachcare/datepicker';
 
 export const MAT_MOMENT_DATE_FORMATS: MatDateFormats = {
   parse: {

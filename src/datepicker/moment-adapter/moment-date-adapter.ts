@@ -7,7 +7,7 @@
  */
 
 import { Inject, Injectable, Optional } from '@angular/core';
-import { DateAdapter, MAT_DATE_LOCALE } from '../core';
+import { DateAdapter, MAT_DATE_LOCALE } from '@coachcare/datepicker';
 
 import * as momentNs from 'moment-timezone';
 export type Moment = momentNs.Moment;

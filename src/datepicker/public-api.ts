@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+export * from './core';
 export * from './datepicker-module';
 export * from './calendar';
 export * from './calendar-body';
@@ -18,6 +19,3 @@ export * from './datepicker-toggle';
 export * from './month-view';
 export * from './year-view';
 export * from './years-view';
-
-export * from './core';
-export * from './moment-adapter';

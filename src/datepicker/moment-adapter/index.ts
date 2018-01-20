@@ -12,7 +12,7 @@ import {
   MAT_DATE_FORMATS,
   MAT_DATE_LOCALE,
   MAT_DATE_LOCALE_PROVIDER
-} from '../core';
+} from '@coachcare/datepicker';
 import { MomentDateAdapter } from './moment-date-adapter';
 import { MAT_MOMENT_DATE_FORMATS } from './moment-date-formats';
 
