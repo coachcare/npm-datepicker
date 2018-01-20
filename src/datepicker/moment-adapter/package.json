@@ -1,0 +1,21 @@
+{
+  "$schema": "../../../node_modules/ng-packagr/dist/package.schema.json",
+  "peerDependencies": {
+    "@coachcare/datepicker": "*"
+  },
+  "ngPackage": {
+    "src": "../",
+    "dest": "../../dist/adapter",
+    "paths": {
+      "@coachcare/datepicker": ["../../../dist/"]
+    },
+    "lib": {
+      "entryFile": "index.ts",
+      "umdModuleIds": {
+        "@coachcare/datepicker": "@coachcare/datepicker",
+        "moment": "moment",
+        "moment-timezone": "moment-timezone"
+      }
+    }
+  }
+}

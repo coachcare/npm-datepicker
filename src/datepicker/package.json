@@ -1,0 +1,37 @@
+{
+  "$schema": "../../node_modules/ng-packagr/dist/package.schema.json",
+  "name": "@coachcare/datepicker",
+  "version": "0.4.2",
+  "description": "Angular Material Datepicker Fork with Timepicker by CoachCare",
+  "keywords": [
+    "coachcare",
+    "frontend",
+    "datepicker"
+  ],
+  "author": "CoachCare.com",
+  "homepage": "https://www.coachcare.com",
+  "license": "MIT",
+  "repository": "github:selvera/npm-datepicker",
+  "bugs": {
+    "url": "https://github.com/selvera/npm-datepicker/issues"
+  },
+  "peerDependencies": {
+    "@angular/cdk": ">= 5.0.0",
+    "@angular/material": ">= 5.0.0",
+    "moment": "*",
+    "moment-timezone": "*",
+    "rxjs": ">= 5.5.2"
+  },
+  "ngPackage": {
+    "dest": "../../dist",
+    "lib": {
+      "entryFile": "index.ts",
+      "umdModuleIds": {
+        "@angular/cdk": "ng.cdk",
+        "@angular/material": "ng.material",
+        "moment": "moment",
+        "moment-timezone": "moment-timezone"
+      }
+    }
+  }
+}
