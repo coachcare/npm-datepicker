@@ -12,12 +12,12 @@ import {
   MAT_DATE_FORMATS,
   MAT_DATE_LOCALE,
   MAT_DATE_LOCALE_PROVIDER
-} from '../core';
-import { MomentDateAdapter } from './moment-date-adapter';
-import { MAT_MOMENT_DATE_FORMATS } from './moment-date-formats';
+} from './core';
+import { MomentDateAdapter } from './moment-adapter/moment-date-adapter';
+import { MAT_MOMENT_DATE_FORMATS } from './moment-adapter/moment-date-formats';
 
-export * from './moment-date-adapter';
-export * from './moment-date-formats';
+export * from './moment-adapter/moment-date-adapter';
+export * from './moment-adapter/moment-date-formats';
 
 @NgModule({
   providers: [

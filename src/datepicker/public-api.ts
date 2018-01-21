@@ -7,6 +7,7 @@
  */
 
 export * from './core';
+export * from './moment-adapter';
 export * from './datepicker-module';
 export * from './calendar';
 export * from './calendar-body';
