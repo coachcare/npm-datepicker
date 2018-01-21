@@ -6,10 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import { NgModule } from '@angular/core';
+import { NgModule, InjectionToken } from '@angular/core';
 import {
   DateAdapter,
-  MAT_DATE_FORMATS,
+  MatDateFormats,
   MAT_DATE_LOCALE,
   MAT_DATE_LOCALE_PROVIDER
 } from '@coachcare/datepicker';
@@ -18,6 +18,9 @@ import { MAT_MOMENT_DATE_FORMATS } from './moment-date-formats';
 
 export * from './moment-date-adapter';
 export * from './moment-date-formats';
+
+/* From @angular */
+export const MAT_DATE_FORMATS = new InjectionToken<MatDateFormats>('mat-date-formats');
 
 @NgModule({
   providers: [
