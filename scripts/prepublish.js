@@ -16,13 +16,3 @@ delete packageJson['ngPackage'];
 delete packageJson['files'];
 
 fs.writeFileSync('dist/package.json', JSON.stringify(packageJson, undefined, 2));
-
-// moment-adapter
-packageJson = JSON.parse(fs.readFileSync('dist/moment-adapter/package.json'));
-
-delete packageJson['$schema'];
-
-fs.writeFileSync(
-  'dist/moment-adapter/package.json',
-  JSON.stringify(packageJson, undefined, 2)
-);
