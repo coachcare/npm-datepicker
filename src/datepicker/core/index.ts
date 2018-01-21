@@ -7,20 +7,15 @@
  */
 
 import { NgModule } from '@angular/core';
-import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_LOCALE_PROVIDER } from './date-adapter';
-import { MAT_DATE_FORMATS, MatDateFormats } from './date-formats';
+import { DateAdapter, MAT_DATE_LOCALE_PROVIDER } from './date-adapter';
+import { MAT_DATE_FORMATS } from './date-formats';
 import { NativeDateAdapter } from './native-date-adapter';
 import { MAT_NATIVE_DATE_FORMATS } from './native-date-formats';
 
-export {
-  DateAdapter,
-  MAT_DATE_LOCALE,
-  MAT_DATE_LOCALE_PROVIDER,
-  MAT_DATE_FORMATS,
-  MAT_NATIVE_DATE_FORMATS,
-  MatDateFormats,
-  NativeDateAdapter
-};
+export * from './date-adapter';
+export * from './date-formats';
+export * from './native-date-adapter';
+export * from './native-date-formats';
 
 @NgModule({
   providers: [
