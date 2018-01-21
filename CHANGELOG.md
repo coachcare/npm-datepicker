@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.6.1"></a>
+## [0.6.1](https://github.com/selvera/npm-datepicker/compare/v0.6.0...v0.6.1) (2018-01-21)
+
+
+### Bug Fixes
+
+* sync material/core exports ([da9c5ca](https://github.com/selvera/npm-datepicker/commit/da9c5ca))
+
+
+
 <a name=""></a>
 # [](https://github.com/selvera/npm-datepicker/compare/v0.6.0...v) (2018-01-21)
 
