@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.8.0"></a>
+# [0.8.0](https://github.com/selvera/npm-datepicker/compare/v0.7.0...v0.8.0) (2018-02-24)
+
+
+### Bug Fixes
+
+* barrels corrected for ngc ([961dc05](https://github.com/selvera/npm-datepicker/commit/961dc05))
+* removing secondary packages from the prepublish script ([51ff7dc](https://github.com/selvera/npm-datepicker/commit/51ff7dc))
+
+
+
 <a name="0.7.0"></a>
 # [0.7.0](https://github.com/selvera/npm-datepicker/compare/v0.6.3...v0.7.0) (2018-01-21)
 
