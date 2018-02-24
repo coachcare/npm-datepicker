@@ -275,7 +275,7 @@ export abstract class DateAdapter<D> {
    * @param first The first date to check.
    * @param second The second date to check.
    * @param unit Unit deep of the comparision.
-   * @returns {boolean} Whether the two dates are equal.
+   * @returns Whether the two dates are equal.
    *     Null dates are considered equal to other null dates.
    */
   sameDate(first: D | null, second: D | null, unit = 'minute'): boolean {

@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-export * from './core';
-export * from './moment-adapter';
+export * from './core/index';
+export * from './moment-adapter/index';
 export * from './datepicker-module';
 export * from './calendar';
 export * from './calendar-body';
