@@ -1,9 +1,9 @@
 const cpx = require('cpx');
 const fs = require('fs');
 
-// cpx.copy('LICENSE', 'dist');
-cpx.copy('README.md', 'dist');
-cpx.copy('CHANGELOG.md', 'dist');
+cpx.copy('LICENSE', './dist');
+cpx.copy('README.md', './dist');
+cpx.copy('CHANGELOG.md', './dist');
 
 // datepicker
 let packageJson = JSON.parse(fs.readFileSync('dist/package.json'));
