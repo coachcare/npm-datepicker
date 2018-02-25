@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.8.1"></a>
+## [0.8.1](https://github.com/selvera/npm-datepicker/compare/v0.8.0...v0.8.1) (2018-02-25)
+
+
+### Bug Fixes
+
+* encountered undefined provider! ([594d2ea](https://github.com/selvera/npm-datepicker/commit/594d2ea))
+
+
+
 <a name="0.8.0"></a>
 # [0.8.0](https://github.com/selvera/npm-datepicker/compare/v0.7.0...v0.8.0) (2018-02-24)
 
