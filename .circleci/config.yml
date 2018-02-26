@@ -1,0 +1,83 @@
+version: 2
+
+defaults: &defaults
+  docker:
+    - image: circleci/node:$NODE_VERSION
+
+jobs:
+  setup:
+    <<: *defaults
+    working_directory: ~/repo
+    steps:
+      - checkout:
+          path: ~/repo
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: NPM Credentials
+          command: |
+            sudo npm install -g npm-cli-login
+            npm-cli-login
+      - run:
+          name: NPM Dependencies
+          command: yarn install
+      - run:
+          name: Lint
+          command: yarn lint
+      - persist_to_workspace:
+          root: .
+          paths:
+           - .
+
+  build:
+    <<: *defaults
+    working_directory: ~/repo
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Build Library
+          command: yarn build
+      - persist_to_workspace:
+          root: ~/repo
+          paths:
+           - .
+
+  publish:
+    working_directory: ~/repo/dist
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: NPM Credentials
+          command: |
+            sudo npm install -g npm-cli-login
+            npm-cli-login
+      - run:
+          name: NPM Publish
+          command: |
+            npm publish --registry=$NPM_REGISTRY
+
+workflows:
+  version: 2
+  setup_build_publish:
+    jobs:
+      - setup:
+          filters:
+            tags:
+              only: /.*/
+      - build:
+          requires:
+            - setup
+          filters:
+            tags:
+              only: /.*/
+      - publish:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /.*/
