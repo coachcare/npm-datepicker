@@ -24,10 +24,9 @@
     "commitmsg": "commitlint -e",
     "debug": "DEBUG=true ng-packagr -p package.json",
     "lint": "ng lint",
-    "release": "standard-version --message 'build: release v%s'",
-    "postrelease": "git push --follow-tags origin master",
     "preupload": "npm run dist && node ./scripts/prepublish.js",
-    "upload": "npm publish --access=public dist/"
+    "upload": "npm publish --access=public dist/",
+    "release": "standard-version --message 'build: release v%s'"
   },
   "devDependencies": {
     "@angular-devkit/core": "^0.4.2",
@@ -67,6 +66,12 @@
     "@angular/material": "*",
     "moment": "*",
     "moment-timezone": "*"
+  },
+  "standard-version": {
+    "scripts": {
+      "postbump": "npm run dist",
+      "posttag": "git push --follow-tags origin master"
+    }
   },
   "ngPackage": {
     "dest": "./dist",
