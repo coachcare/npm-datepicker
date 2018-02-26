@@ -30,6 +30,7 @@
     "upload": "npm publish --access=public dist/"
   },
   "devDependencies": {
+    "@angular-devkit/core": "^0.4.2",
     "@angular/animations": "^5.0.0",
     "@angular/cdk": "^5.0.0",
     "@angular/cli": "1.6.0",
