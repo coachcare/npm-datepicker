@@ -37,7 +37,7 @@ jobs:
           at: ~/repo
       - run:
           name: Build Library
-          command: yarn build
+          command: yarn dist
       - persist_to_workspace:
           root: ~/repo
           paths:

@@ -6,7 +6,7 @@ cpx.copy('README.md', './dist');
 cpx.copy('CHANGELOG.md', './dist');
 
 // datepicker
-let packageJson = JSON.parse(fs.readFileSync('dist/package.json'));
+let packageJson = JSON.parse(fs.readFileSync('./dist/package.json'));
 
 delete packageJson['$schema'];
 delete packageJson['devDependencies'];
@@ -15,4 +15,4 @@ delete packageJson['private'];
 delete packageJson['ngPackage'];
 delete packageJson['files'];
 
-fs.writeFileSync('dist/package.json', JSON.stringify(packageJson, undefined, 2));
+fs.writeFileSync('./dist/package.json', JSON.stringify(packageJson, undefined, 2));

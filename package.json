@@ -18,15 +18,15 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "npm run build:pkg && npm run build:scss",
-    "build:pkg": "rimraf dist && ng-packagr -p package.json",
-    "build:scss": "scss-bundle -e ./src/datepicker/theming.scss -d ./dist/_theming.scss",
+    "dist": "npm run dist:pkg && npm run dist:scss",
+    "dist:pkg": "rimraf dist && ng-packagr -p package.json",
+    "dist:scss": "scss-bundle -e ./src/datepicker/theming.scss -d ./dist/_theming.scss",
     "commitmsg": "commitlint -e",
     "debug": "DEBUG=true ng-packagr -p package.json",
     "lint": "ng lint",
     "release": "standard-version --message 'build: release v%s'",
     "postrelease": "git push --follow-tags origin master",
-    "preupload": "npm run build && node ./scripts/prepublish.js",
+    "preupload": "npm run dist && node ./scripts/prepublish.js",
     "upload": "npm publish --access=public dist/"
   },
   "devDependencies": {
