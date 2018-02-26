@@ -11,8 +11,8 @@ import {
   Output
 } from '@angular/core';
 import { coerceDateProperty } from './coerce-date-property';
-import { MAT_DATE_FORMATS, MatDateFormats } from './core';
-import { DateAdapter } from './core';
+import { MAT_DATE_FORMATS, MatDateFormats } from './core/index';
+import { DateAdapter } from './core/index';
 
 export const CLOCK_RADIUS = 50;
 export const CLOCK_INNER_RADIUS = 27.5;

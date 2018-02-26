@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import { DateAdapter } from './core';
+import { DateAdapter } from './core/index';
 
 /**
  * Function that attempts to coerce a value to a date using a DateAdapter. Date instances, null,

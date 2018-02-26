@@ -43,7 +43,7 @@ import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 import { MatCalendar } from './calendar';
 import { coerceDateProperty } from './coerce-date-property';
-import { DateAdapter } from './core';
+import { DateAdapter } from './core/index';
 import { createMissingDateImplError } from './datepicker-errors';
 import { MatDatepickerInput } from './datepicker-input';
 

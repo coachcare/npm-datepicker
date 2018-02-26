@@ -20,8 +20,8 @@ import {
 } from '@angular/core';
 import { MatCalendarCell } from './calendar-body';
 import { coerceDateProperty } from './coerce-date-property';
-import { MAT_DATE_FORMATS, MatDateFormats } from './core';
-import { DateAdapter } from './core';
+import { MAT_DATE_FORMATS, MatDateFormats } from './core/index';
+import { DateAdapter } from './core/index';
 import { slideCalendar } from './datepicker-animations';
 import { createMissingDateImplError } from './datepicker-errors';
 

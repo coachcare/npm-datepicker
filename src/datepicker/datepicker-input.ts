@@ -34,8 +34,8 @@ import {
 import { MatFormField } from '@angular/material/form-field';
 import { Subscription } from 'rxjs/Subscription';
 import { coerceDateProperty } from './coerce-date-property';
-import { DateAdapter } from './core';
-import { MAT_DATE_FORMATS, MatDateFormats } from './core';
+import { DateAdapter } from './core/index';
+import { MAT_DATE_FORMATS, MatDateFormats } from './core/index';
 import { MatDatepicker } from './datepicker';
 import { createMissingDateImplError } from './datepicker-errors';
 

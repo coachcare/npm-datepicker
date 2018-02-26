@@ -26,8 +26,8 @@ import 'rxjs/add/operator/sampleTime';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { coerceDateProperty } from './coerce-date-property';
-import { MAT_DATE_FORMATS, MatDateFormats } from './core';
-import { DateAdapter } from './core';
+import { MAT_DATE_FORMATS, MatDateFormats } from './core/index';
+import { DateAdapter } from './core/index';
 import { createMissingDateImplError } from './datepicker-errors';
 
 const YEAR_LINE_HEIGHT = 35;
