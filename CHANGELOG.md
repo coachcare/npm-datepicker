@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.9.0"></a>
+# [0.9.0](https://github.com/selvera/npm-datepicker/compare/v0.8.3...v0.9.0) (2018-06-13)
+
+
+### Bug Fixes
+
+* README note for theming, fixes [#2](https://github.com/selvera/npm-datepicker/issues/2) ([0d8de37](https://github.com/selvera/npm-datepicker/commit/0d8de37))
+
+
+### Features
+
+* **lib:** created ng lib for the datepicker ([ade96cb](https://github.com/selvera/npm-datepicker/commit/ade96cb))
+* sync with the latest Angular Material 6 Module ([a835916](https://github.com/selvera/npm-datepicker/commit/a835916))
+
+
+
 <a name="0.8.3"></a>
 ## [0.8.3](https://github.com/selvera/npm-datepicker/compare/v0.8.2...v0.8.3) (2018-02-26)
 
