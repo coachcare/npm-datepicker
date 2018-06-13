@@ -14,20 +14,20 @@ https://material.angular.io/components/datepicker/overview
 </mat-form-field>
 ```
 
-The `mat-datepicker` has the following *input* parameters:
+The `mat-datepicker` has the following _input_ parameters:
 
-* `startAt`: start Date/Moment, otherwise the current selected value
-* `type`: `date | datetime | time` output type and available views. default: date
-* `startView`: `clock | month | year | years` initial view to load. default: month
-* `clockStep`: interval to use in the clock view. defailt: 1
-* `twelveHour`: whether to use 12 or 24 hrs format. default: false
-* `touchUi`: calendar UI mode. default: true (recommended)
-* `disabled`: whether the datepicker pop-up should be disabled
-* `matDatepicker`: whether the datepicker is connected to a date type one
+- `startAt`: start Date/Moment, otherwise the current selected value
+- `type`: `date | datetime | time` output type and available views. default: date
+- `startView`: `clock | month | year | years` initial view to load. default: month
+- `clockStep`: interval to use in the clock view. defailt: 1
+- `twelveHour`: whether to use 12 or 24 hrs format. default: false
+- `touchUi`: calendar UI mode. default: true (recommended)
+- `disabled`: whether the datepicker pop-up should be disabled
+- `matDatepicker`: whether the datepicker is connected to a date type one
 
-and the following *output*:
+and the following _output_:
 
-* `selectedChanged`: emits new selected date when selected date changes
+- `selectedChanged`: emits new selected date when selected date changes
 
 ## Installation
 
@@ -35,6 +35,7 @@ As usual run `yarn add @coachcare/datepicker` or `npm install @coachcare/datepic
 This module requires `moment` and `moment-timezome` for the MomentDateAdapter.
 
 Now add the modules to your Angular Module:
+
 ```
 import { MatDatepickerModule, MatMomentDateModule } from '@coachcare/datepicker';
 
@@ -50,9 +51,17 @@ export class AppModule {}
 ```
 
 **Note** that the `MatDatepickerModule` can be loaded into feature modules,  
-but it requires the providers given by `MatMomentDateModule`,  
-so it's recommended to be imported in your root Module.
+but take in account that it requires the providers given by `MatMomentDateModule`.
 
+### Theming
+
+Remember to include the styles to your app, and call the mixing with your theme:
+
+```
+@import 'node_modules/@coachcare/datepicker/theming'
+
+@include mat-datepicker($theme);
+```
 
 ## Usage Examples
 
@@ -94,18 +103,19 @@ and will emit the selectedChanged too.
   <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
   <mat-datepicker type="time" clockStep="5" #pickerEnd [matDatepicker]="pickerStart"></mat-datepicker>
 </mat-form-field>
-
 ```
+
 with
+
 ```
 onChange() {
   const start = this.form.get('startTime').value;
   this.minEnd = moment(start).add(15, 'minutes');
 }
-
 ```
 
 ## Contribute
 
 Feedback and suggestions are welcome, also gratitude demonstrations :)
+
 Enjoy!
