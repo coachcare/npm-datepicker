@@ -1,19 +1,30 @@
 {
+  "beautify.language": {
+    "js": { "type": [ "javascript" ] },
+    "css": [],
+    "html": [ "htm" ]
+  },
   "editor.formatOnPaste": false,
   "editor.formatOnSave": true,
   "editor.minimap.enabled": false,
   "editor.minimap.renderCharacters": false,
-  "beautify.ignore": ["html", "json"],
+  "editor.tabSize": 2,
+  "editor.wordWrapColumn": 120,
+  "files.trimTrailingWhitespace": true,
+  "[markdown]": {
+    "files.trimTrailingWhitespace": false
+  },
   "json.format.enable": false,
   "html.format.enable": false,
-  "html.format.wrapLineLength": 80,
-  "prettier.disableLanguages": ["json"],
+  "html.format.wrapLineLength": 120,
+  "prettier.disableLanguages": ["html", "js", "json", "jsonc"],
   "prettier.eslintIntegration": false,
-  "prettier.printWidth": 90,
+  "prettier.printWidth": 120,
   "prettier.semi": true,
   "prettier.singleQuote": true,
   "prettier.tabWidth": 2,
   "prettier.trailingComma": "none",
   "prettier.useTabs": false,
-  "tslint.autoFixOnSave": true
+  "tslint.autoFixOnSave": true,
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
