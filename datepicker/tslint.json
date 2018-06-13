@@ -1,0 +1,31 @@
+{
+  "rules": {
+    "directive-selector": [
+      true,
+      "attribute",
+      "lib",
+      "camelCase"
+    ],
+    "component-selector": false,
+    "component-class-suffix": false,
+    "directive-class-suffix": false,
+    "binary-expression-operand-order": false,
+    "member-ordering": false,
+    "no-consecutive-blank-lines": false,
+    "no-inferrable-types": false,
+    "no-non-null-assertion": false,
+    "no-use-before-declare": false,
+    "object-literal-key-quotes": false,
+    "one-variable-per-declaration": false,
+    "ordered-imports": false,
+    "prefer-const": false,
+    "switch-default": false,
+    "triple-equals": false,
+    "use-input-property-decorator": false,
+    "use-output-property-decorator": false,
+    "use-host-property-decorator": false,
+    "no-input-rename": false,
+    "no-output-rename": false,
+    "whitespace": false
+  }
+}
