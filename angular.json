@@ -1,7 +1,8 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
-  "newProjectRoot": "projects",
+  "newProjectRoot": "",
+  "defaultProject": "ccr-datepicker",
   "projects": {
     "ccr-datepicker": {
       "root": "",
@@ -119,7 +120,6 @@
       }
     }
   },
-  "defaultProject": "ccr-datepicker",
   "schematics": {
     "@schematics/angular:class": {
       "spec": false
