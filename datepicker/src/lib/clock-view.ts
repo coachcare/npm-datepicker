@@ -8,11 +8,12 @@ import {
   Inject,
   Input,
   Optional,
-  Output
+  Output,
+  ViewEncapsulation
 } from '@angular/core';
-import { coerceDateProperty } from './coerce-date-property';
 import { MAT_DATE_FORMATS, MatDateFormats } from './core/index';
 import { DateAdapter } from './core/index';
+import { createMissingDateImplError } from './datepicker-errors';
 
 export const CLOCK_RADIUS = 50;
 export const CLOCK_INNER_RADIUS = 27.5;
@@ -21,42 +22,36 @@ export const CLOCK_TICK_RADIUS = 7.0833;
 
 export type ClockView = 'hour' | 'minute';
 
-function createMissingDateImplError(provider: string) {
-  return Error(
-    `MdDatepicker: No provider found for ${provider}. You must import one of the following ` +
-      `modules at your application root: MdNativeDateModule, or provide a custom implementation.`
-  );
-}
-
 /**
  * A clock that is used as part of the datepicker.
+ * @docs-private
  */
 @Component({
   selector: 'mat-clock-view',
   templateUrl: 'clock-view.html',
-  // styleUrls: ['clock-view.scss'],
-  preserveWhitespaces: false,
+  exportAs: 'matClockView',
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     role: 'clock',
     '(mousedown)': '_handleMousedown($event)'
-  }
+  },
+  preserveWhitespaces: false
 })
 export class MatClockView<D> implements AfterContentInit {
-  // The date to display in this clock view. (the rest is ignored)
+  /**
+   * The time to display in this clock view. (the rest is ignored)
+   */
   @Input()
   get activeDate(): D {
     return this._activeDate;
   }
   set activeDate(value: D) {
     const oldActiveDate = this._activeDate;
-    this._activeDate =
-      coerceDateProperty(this._dateAdapter, value) || this._dateAdapter.today();
+    const validDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value)) || this._dateAdapter.today();
+    this._activeDate = this._dateAdapter.clampDate(validDate, this.minDate, this.maxDate);
 
-    if (
-      oldActiveDate &&
-      this._dateAdapter.compareDate(oldActiveDate, this._activeDate, 'minute')
-    ) {
+    if (oldActiveDate && this._dateAdapter.compareDate(oldActiveDate, this._activeDate, 'minute')) {
       this._init();
     }
   }
@@ -68,9 +63,29 @@ export class MatClockView<D> implements AfterContentInit {
     return this._selected;
   }
   set selected(value: D | null) {
-    this._selected = coerceDateProperty(this._dateAdapter, value);
+    this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
   private _selected: D | null;
+
+  /** The minimum selectable date. */
+  @Input()
+  get minDate(): D | null {
+    return this._minDate;
+  }
+  set minDate(value: D | null) {
+    this._minDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
+  private _minDate: D | null;
+
+  /** The maximum selectable date. */
+  @Input()
+  get maxDate(): D | null {
+    return this._maxDate;
+  }
+  set maxDate(value: D | null) {
+    this._maxDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
+  private _maxDate: D | null;
 
   // A function used to filter which dates are selectable.
   @Input() dateFilter: (date: D, unit?: string) => boolean;
@@ -79,21 +94,21 @@ export class MatClockView<D> implements AfterContentInit {
 
   @Input() twelveHour = false;
 
+  // Whether the clock is in hour view.
+  @Input() hourView = true;
+
   // Emits when the final time was selected.
-  @Output() selectedTime = new EventEmitter<D>();
+  @Output() readonly selectedTime = new EventEmitter<D>();
 
   // Emits when the currently selected date changes.
-  @Output() selectedChange = new EventEmitter<D>();
+  @Output() readonly selectedChange = new EventEmitter<D>();
 
   // Emits when the currently selected date changes.
-  @Output() changeView = new EventEmitter<void>();
+  @Output() readonly changeView = new EventEmitter<void>();
 
   // Hours and Minutes representing the clock view.
   _hours: Array<any> = [];
   _minutes: Array<any> = [];
-
-  // Whether the clock is in hour view.
-  @Input() hourView: boolean = true;
 
   _selectedHour: number | null;
   _selectedMinute: number | null;
@@ -109,8 +124,7 @@ export class MatClockView<D> implements AfterContentInit {
     let deg = 0;
 
     if (this.twelveHour) {
-      this._selectedHour =
-        this._selectedHour < 12 ? this._selectedHour : this._selectedHour - 12;
+      this._selectedHour = this._selectedHour < 12 ? this._selectedHour : this._selectedHour - 12;
       this._selectedHour = this._selectedHour === 0 ? 12 : this._selectedHour;
     }
 
@@ -133,12 +147,12 @@ export class MatClockView<D> implements AfterContentInit {
   }
 
   constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
     private _element: ElementRef,
     @Optional() public _dateAdapter: DateAdapter<D>,
     @Optional()
     @Inject(MAT_DATE_FORMATS)
-    private _dateFormats: MatDateFormats,
-    private _changeDetectorRef: ChangeDetectorRef
+    private _dateFormats: MatDateFormats
   ) {
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
@@ -261,12 +275,9 @@ export class MatClockView<D> implements AfterContentInit {
     const pageY = event.pageY !== undefined ? event.pageY : event.touches[0].pageY;
     const x = width / 2 - (pageX - triggerRect.left - window.pageXOffset);
     const y = height / 2 - (pageY - triggerRect.top - window.pageYOffset);
-    const unit =
-      Math.PI / (this.hourView ? 6 : this.clockStep ? 30 / this.clockStep : 30);
+    const unit = Math.PI / (this.hourView ? 6 : this.clockStep ? 30 / this.clockStep : 30);
     const z = Math.sqrt(x * x + y * y);
-    const outer =
-      this.hourView &&
-      z > (width * (CLOCK_OUTER_RADIUS / 100) + width * (CLOCK_INNER_RADIUS / 100)) / 2;
+    const outer = this.hourView && z > (width * (CLOCK_OUTER_RADIUS / 100) + width * (CLOCK_INNER_RADIUS / 100)) / 2;
 
     let radian = Math.atan2(-x, y);
     if (radian < 0) {
@@ -306,5 +317,15 @@ export class MatClockView<D> implements AfterContentInit {
     } else {
       this.selectedTime.emit(this.activeDate);
     }
+  }
+
+  _focusActiveCell() {}
+
+  /**
+   * @param obj The object to check.
+   * @returns The given object if it is both a date instance and valid, otherwise null.
+   */
+  private _getValidDateOrNull(obj: any): D | null {
+    return this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj) ? obj : null;
   }
 }

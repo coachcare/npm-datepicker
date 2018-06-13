@@ -101,6 +101,7 @@
 
       .mat-calendar-main {
         height: calc(100% - 37px);
+        outline: none !important;
       }
       &.mat-calendar-view-clock {
         .mat-calendar-main {

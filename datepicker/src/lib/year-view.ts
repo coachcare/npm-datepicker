@@ -7,6 +7,17 @@
  */
 
 import {
+  DOWN_ARROW,
+  END,
+  ENTER,
+  HOME,
+  LEFT_ARROW,
+  PAGE_DOWN,
+  PAGE_UP,
+  RIGHT_ARROW,
+  UP_ARROW
+} from '@angular/cdk/keycodes';
+import {
   AfterContentInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -16,10 +27,11 @@ import {
   Input,
   Optional,
   Output,
+  ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import { MatCalendarCell } from './calendar-body';
-import { coerceDateProperty } from './coerce-date-property';
+import { Directionality } from '@angular/cdk/bidi';
+import { MatCalendarBody, MatCalendarCell } from './calendar-body';
 import { MAT_DATE_FORMATS, MatDateFormats } from './core/index';
 import { DateAdapter } from './core/index';
 import { slideCalendar } from './datepicker-animations';
@@ -32,10 +44,11 @@ import { createMissingDateImplError } from './datepicker-errors';
 @Component({
   selector: 'mat-year-view',
   templateUrl: 'year-view.html',
+  exportAs: 'matYearView',
   animations: [slideCalendar],
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  preserveWhitespaces: false
 })
 export class MatYearView<D> implements AfterContentInit {
   /** The date to display in this year view (everything other than the year is ignored). */
@@ -45,14 +58,10 @@ export class MatYearView<D> implements AfterContentInit {
   }
   set activeDate(value: D) {
     const oldActiveDate = this._activeDate;
-    this._activeDate =
-      coerceDateProperty(this._dateAdapter, value) || this._dateAdapter.today();
+    const validDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value)) || this._dateAdapter.today();
+    this._activeDate = this._dateAdapter.clampDate(validDate, this.minDate, this.maxDate);
 
-    if (
-      oldActiveDate &&
-      this._dateAdapter.getYear(oldActiveDate) !==
-        this._dateAdapter.getYear(this._activeDate)
-    ) {
+    if (oldActiveDate && this._dateAdapter.getYear(oldActiveDate) !== this._dateAdapter.getYear(this._activeDate)) {
       this._init();
     }
   }
@@ -64,10 +73,30 @@ export class MatYearView<D> implements AfterContentInit {
     return this._selected;
   }
   set selected(value: D | null) {
-    this._selected = coerceDateProperty(this._dateAdapter, value);
+    this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
     this._selectedMonth = this._getMonthInCurrentYear(this._selected);
   }
   private _selected: D | null;
+
+  /** The minimum selectable date. */
+  @Input()
+  get minDate(): D | null {
+    return this._minDate;
+  }
+  set minDate(value: D | null) {
+    this._minDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
+  private _minDate: D | null;
+
+  /** The maximum selectable date. */
+  @Input()
+  get maxDate(): D | null {
+    return this._maxDate;
+  }
+  set maxDate(value: D | null) {
+    this._maxDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
+  private _maxDate: D | null;
 
   /** A function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D, unit?: string) => boolean;
@@ -76,7 +105,10 @@ export class MatYearView<D> implements AfterContentInit {
   @Input() animationDir: string;
 
   /** Emits when a new month is selected. */
-  @Output() selectedChange = new EventEmitter<D>();
+  @Output() readonly selectedChange = new EventEmitter<D>();
+
+  /** The body of calendar table */
+  @ViewChild(MatCalendarBody) _matCalendarBody: MatCalendarBody;
 
   /** Grid of calendar cells representing the months of the year. */
   _months: MatCalendarCell[][];
@@ -94,11 +126,12 @@ export class MatYearView<D> implements AfterContentInit {
   _selectedMonth: number | null;
 
   constructor(
-    @Optional() public _dateAdapter: DateAdapter<D>,
+    private _changeDetectorRef: ChangeDetectorRef,
     @Optional()
     @Inject(MAT_DATE_FORMATS)
     private _dateFormats: MatDateFormats,
-    private _changeDetectorRef: ChangeDetectorRef
+    @Optional() public _dateAdapter: DateAdapter<D>,
+    @Optional() private _dir?: Directionality
   ) {
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
@@ -114,7 +147,21 @@ export class MatYearView<D> implements AfterContentInit {
 
   /** Handles when a new month is selected. */
   _monthSelected(month: number) {
-    this.selectedChange.emit(this._createMonthDate(month));
+    const daysInMonth = this._dateAdapter.getNumDaysInMonth(
+      this._dateAdapter.createDate(this._dateAdapter.getYear(this.activeDate), month, 1)
+    );
+    const selectedYear = this._dateAdapter.getYear(this.activeDate);
+    const selectedDay = this._dateAdapter.getDate(this.activeDate);
+    const selectedHours = this._dateAdapter.getHours(this.activeDate);
+    const selectedMinutes = this._dateAdapter.getMinutes(this.activeDate);
+    const date = this._dateAdapter.createDate(
+      selectedYear,
+      month,
+      Math.min(selectedDay, daysInMonth),
+      selectedHours,
+      selectedMinutes
+    );
+    this.selectedChange.emit(date);
   }
 
   /** Initializes this year view. */
@@ -137,8 +184,7 @@ export class MatYearView<D> implements AfterContentInit {
    * Returns null if the given Date is in another year.
    */
   private _getMonthInCurrentYear(date: D | null) {
-    return date &&
-      this._dateAdapter.getYear(date) === this._dateAdapter.getYear(this.activeDate)
+    return date && this._dateAdapter.getYear(date) === this._dateAdapter.getYear(this.activeDate)
       ? this._dateAdapter.getMonth(date)
       : null;
   }
@@ -149,40 +195,132 @@ export class MatYearView<D> implements AfterContentInit {
       this._dateAdapter.createDate(this._dateAdapter.getYear(this.activeDate), month, 1),
       this._dateFormats.display.monthYearA11yLabel
     );
-    return new MatCalendarCell(
-      month,
-      monthName.toLocaleUpperCase(),
-      ariaLabel,
-      this._isMonthEnabled(month)
-    );
+    return new MatCalendarCell(month, monthName.toLocaleUpperCase(), ariaLabel, this._shouldEnableMonth(month));
   }
 
   /** Whether the given month is enabled. */
-  private _isMonthEnabled(month: number) {
+  private _shouldEnableMonth(month: number) {
+    const activeYear = this._dateAdapter.getYear(this.activeDate);
+
+    if (
+      month === undefined ||
+      month === null ||
+      this._isYearAndMonthAfterMaxDate(activeYear, month) ||
+      this._isYearAndMonthBeforeMinDate(activeYear, month)
+    ) {
+      return false;
+    }
+
     if (!this.dateFilter) {
       return true;
     }
 
-    const date = this._createMonthDate(month);
+    const firstOfMonth = this._dateAdapter.createDate(activeYear, month, 1);
 
-    return this.dateFilter(date, 'month') ? true : false;
+    // If any date in the month is enabled count the month as enabled.
+    for (let d = firstOfMonth; this._dateAdapter.getMonth(d) == month; d = this._dateAdapter.addCalendarDays(d, 1)) {
+      if (this.dateFilter(d, 'day')) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
-  private _createMonthDate(month: number): D {
-    const daysInMonth = this._dateAdapter.getNumDaysInMonth(
-      this._dateAdapter.createDate(this._dateAdapter.getYear(this.activeDate), month, 1)
-    );
-    const selectedYear = this._dateAdapter.getYear(this.activeDate);
-    const selectedDay = this._dateAdapter.getDate(this.activeDate);
-    const selectedHours = this._dateAdapter.getHours(this.activeDate);
-    const selectedMinutes = this._dateAdapter.getMinutes(this.activeDate);
+  /**
+   * Tests whether the combination month/year is after this.maxDate, considering
+   * just the month and year of this.maxDate
+   */
+  private _isYearAndMonthAfterMaxDate(year: number, month: number) {
+    if (this.maxDate) {
+      const maxYear = this._dateAdapter.getYear(this.maxDate);
+      const maxMonth = this._dateAdapter.getMonth(this.maxDate);
 
-    return this._dateAdapter.createDate(
-      selectedYear,
-      month,
-      Math.min(selectedDay, daysInMonth),
-      selectedHours,
-      selectedMinutes
-    );
+      return year > maxYear || (year === maxYear && month > maxMonth);
+    }
+
+    return false;
+  }
+
+  /**
+   * Tests whether the combination month/year is before this.minDate, considering
+   * just the month and year of this.minDate
+   */
+  private _isYearAndMonthBeforeMinDate(year: number, month: number) {
+    if (this.minDate) {
+      const minYear = this._dateAdapter.getYear(this.minDate);
+      const minMonth = this._dateAdapter.getMonth(this.minDate);
+
+      return year < minYear || (year === minYear && month < minMonth);
+    }
+  }
+
+  /** Handles keydown events on the calendar body when calendar is in year view. */
+  _handleCalendarBodyKeydown(event: KeyboardEvent): void {
+    // TODO(mmalerba): We currently allow keyboard navigation to disabled dates, but just prevent
+    // disabled ones from being selected. This may not be ideal, we should look into whether
+    // navigation should skip over disabled dates, and if so, how to implement that efficiently.
+
+    const isRtl = this._isRtl();
+
+    switch (event.keyCode) {
+      case LEFT_ARROW:
+        this.activeDate = this._dateAdapter.addCalendarMonths(this._activeDate, isRtl ? 1 : -1);
+        break;
+      case RIGHT_ARROW:
+        this.activeDate = this._dateAdapter.addCalendarMonths(this._activeDate, isRtl ? -1 : 1);
+        break;
+      case UP_ARROW:
+        this.activeDate = this._dateAdapter.addCalendarMonths(this._activeDate, -4);
+        break;
+      case DOWN_ARROW:
+        this.activeDate = this._dateAdapter.addCalendarMonths(this._activeDate, 4);
+        break;
+      case HOME:
+        this.activeDate = this._dateAdapter.addCalendarMonths(
+          this._activeDate,
+          this._dateAdapter.getMonth(this._activeDate)
+        );
+        break;
+      case END:
+        this.activeDate = this._dateAdapter.addCalendarMonths(
+          this._activeDate,
+          11 - this._dateAdapter.getMonth(this._activeDate)
+        );
+        break;
+      case PAGE_UP:
+        this.activeDate = this._dateAdapter.addCalendarYears(this._activeDate, event.altKey ? -10 : -1);
+        break;
+      case PAGE_DOWN:
+        this.activeDate = this._dateAdapter.addCalendarYears(this._activeDate, event.altKey ? 10 : 1);
+        break;
+      case ENTER:
+        this._monthSelected(this._dateAdapter.getMonth(this._activeDate));
+        break;
+      default:
+        // Don't prevent default or focus active cell on keys that we don't explicitly handle.
+        return;
+    }
+
+    this._focusActiveCell();
+    // Prevent unexpected default actions such as form submission.
+    event.preventDefault();
+  }
+
+  _focusActiveCell() {
+    this._matCalendarBody._focusActiveCell();
+  }
+
+  /**
+   * @param obj The object to check.
+   * @returns The given object if it is both a date instance and valid, otherwise null.
+   */
+  private _getValidDateOrNull(obj: any): D | null {
+    return this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj) ? obj : null;
+  }
+
+  /** Determines whether the user has the RTL layout direction. */
+  private _isRtl() {
+    return this._dir && this._dir.value === 'rtl';
   }
 }

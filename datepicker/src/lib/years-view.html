@@ -1,4 +1,4 @@
-<div class="mat-calendar-years">
+<div class="mat-calendar-years" (keydown)="_handleCalendarBodyKeydown($event)">
   <span *ngFor="let year of _years"
   [class]="'mat-calendar-years-item mat-calendar-years-item-diff' + abs(year.value - _selectedYear)"
   [class.mat-calendar-years-item-active]="year.value === _selectedYear"

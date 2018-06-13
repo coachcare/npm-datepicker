@@ -8,7 +8,7 @@
 
 import { InjectionToken } from '@angular/core';
 
-export type MatDateFormats = {
+export interface MatDateFormats {
   parse: {
     date: any;
     datetime: any;
@@ -25,6 +25,6 @@ export type MatDateFormats = {
     monthYearA11yLabel: any;
     timeLabel: any;
   };
-};
+}
 
 export const MAT_DATE_FORMATS = new InjectionToken<MatDateFormats>('mat-date-formats');

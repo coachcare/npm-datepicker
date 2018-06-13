@@ -77,16 +77,14 @@
     </button>
   </div>
 
-  <div class="mat-calendar-main"
-    (keydown)="_handleCalendarBodyKeydown($event)"
-    [ngSwitch]="view" cdkMonitorSubtreeFocus>
+  <div class="mat-calendar-main" [ngSwitch]="view" cdkMonitorSubtreeFocus tabindex="-1">
 
     <mat-clock-view
       *ngSwitchCase="'clock'"
       [clockStep]="clockStep"
       [twelveHour]="twelveHour"
       [hourView]="_hourView"
-      [activeDate]="_activeDate"
+      [activeDate]="activeDate"
       [selected]="selected"
       [dateFilter]="_dateFilterForViews"
       (selectedTime)="_timeSelected($event)"
@@ -96,9 +94,11 @@
 
     <mat-month-view
       *ngSwitchCase="'month'"
-      [activeDate]="_activeDate"
+      [activeDate]="activeDate"
       [selected]="selected"
       [dateFilter]="_dateFilterForViews"
+      [maxDate]="maxDate"
+      [minDate]="minDate"
       [animationDir]="_animationDir"
       (selectedChange)="_dateSelected($event)"
       (_userSelection)="_showHourView()">
@@ -106,18 +106,22 @@
 
     <mat-year-view
       *ngSwitchCase="'year'"
-      [activeDate]="_activeDate"
+      [activeDate]="activeDate"
       [selected]="selected"
       [dateFilter]="_dateFilterForViews"
+      [maxDate]="maxDate"
+      [minDate]="minDate"
       [animationDir]="_animationDir"
       (selectedChange)="_monthSelected($event)">
     </mat-year-view>
 
     <mat-years-view
       *ngSwitchCase="'years'"
-      [activeDate]="_activeDate"
+      [(activeDate)]="activeDate"
       [selected]="selected"
       [dateFilter]="_dateFilterForViews"
+      [maxDate]="maxDate"
+      [minDate]="minDate"
       (selectedChange)="_yearSelected($event)">
     </mat-years-view>
   </div>

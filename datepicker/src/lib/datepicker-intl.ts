@@ -7,16 +7,36 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
+
+export interface MatDatepickerIntlCatalog {
+  calendarLabel: string;
+  openCalendarLabel: string;
+  prevMonthLabel: string;
+  nextMonthLabel: string;
+  prevYearLabel: string;
+  nextYearLabel: string;
+  setToAMLabel: string;
+  setToPMLabel: string;
+  switchToMinuteViewLabel: string;
+  switchToHourViewLabel: string;
+  switchToMonthViewLabel: string;
+  switchToYearViewLabel: string;
+  switchToYearsViewLabel: string;
+  buttonSubmitText: string;
+  buttonSubmitLabel: string;
+  buttonCancelText: string;
+  buttonCancelLabel: string;
+}
 
 /** Datepicker data that requires internationalization. */
-@Injectable()
-export class MatDatepickerIntl {
+@Injectable({ providedIn: 'root' })
+export class MatDatepickerIntl implements MatDatepickerIntlCatalog {
   /**
    * Stream that emits whenever the labels here are changed. Use this to notify
    * components if the labels have changed after initialization.
    */
-  changes: Subject<void> = new Subject<void>();
+  readonly changes = new Subject<void>();
 
   /** A label for the calendar popup (used by screen readers). */
   calendarLabel = 'Calendar';
@@ -53,6 +73,9 @@ export class MatDatepickerIntl {
 
   /** A label for the 'switch to year view' button (used by screen readers). */
   switchToYearViewLabel = 'Change to year view';
+
+  /** A label for the 'switch to years view' button (used by screen readers). */
+  switchToYearsViewLabel = 'Change to years view';
 
   /** Text for the 'submit' button (used by screen readers). */
   buttonSubmitText = 'Ok';

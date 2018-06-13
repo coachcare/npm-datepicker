@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import { DOWN_ARROW, ENTER, UP_ARROW } from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -15,6 +16,7 @@ import {
   EventEmitter,
   Inject,
   Input,
+  OnDestroy,
   Optional,
   Output,
   ViewEncapsulation
@@ -25,7 +27,6 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/sampleTime';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { coerceDateProperty } from './coerce-date-property';
 import { MAT_DATE_FORMATS, MatDateFormats } from './core/index';
 import { DateAdapter } from './core/index';
 import { createMissingDateImplError } from './datepicker-errors';
@@ -33,25 +34,31 @@ import { createMissingDateImplError } from './datepicker-errors';
 const YEAR_LINE_HEIGHT = 35;
 
 /**
- * An internal component used to display a single year in the datepicker.
+ * An internal component used to display a year selector in the datepicker.
  * @docs-private
  */
 @Component({
   selector: 'mat-years-view',
   templateUrl: 'years-view.html',
+  exportAs: 'matYearsView',
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  preserveWhitespaces: false
 })
-export class MatYearsView<D> implements AfterContentInit {
-  /** The date to display in this year view (everything other than the year is ignored). */
+export class MatYearsView<D> implements AfterContentInit, OnDestroy {
+  /** The date to display in this view (everything other than the year is ignored). */
   @Input()
   get activeDate(): D {
     return this._activeDate;
   }
   set activeDate(value: D) {
-    this._activeDate =
-      coerceDateProperty(this._dateAdapter, value) || this._dateAdapter.today();
+    let oldActiveDate = this._activeDate;
+    const validDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value)) || this._dateAdapter.today();
+    this._activeDate = this._dateAdapter.clampDate(validDate, this.minDate, this.maxDate);
+
+    if (oldActiveDate && this._dateAdapter.getYear(oldActiveDate) != this._dateAdapter.getYear(this._activeDate)) {
+      this._init();
+    }
   }
   private _activeDate: D;
 
@@ -61,15 +68,36 @@ export class MatYearsView<D> implements AfterContentInit {
     return this._selected;
   }
   set selected(value: D | null) {
-    this._selected = coerceDateProperty(this._dateAdapter, value);
+    this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+    this._selectedYear = this._selected && this._dateAdapter.getYear(this._selected);
   }
   private _selected: D | null;
+
+  /** The minimum selectable date. */
+  @Input()
+  get minDate(): D | null {
+    return this._minDate;
+  }
+  set minDate(value: D | null) {
+    this._minDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
+  private _minDate: D | null;
+
+  /** The maximum selectable date. */
+  @Input()
+  get maxDate(): D | null {
+    return this._maxDate;
+  }
+  set maxDate(value: D | null) {
+    this._maxDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
+  private _maxDate: D | null;
 
   /** A function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D, unit?: string) => boolean;
 
   /** Emits when a new month is selected. */
-  @Output() selectedChange = new EventEmitter<D>();
+  @Output() readonly selectedChange = new EventEmitter<D>();
 
   /** List of years. */
   _years: Array<{ value: number; enabled: boolean }> = [];
@@ -81,12 +109,12 @@ export class MatYearsView<D> implements AfterContentInit {
   _disposeScroller: Subscription;
 
   constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
     private element: ElementRef,
     @Optional() public _dateAdapter: DateAdapter<D>,
     @Optional()
     @Inject(MAT_DATE_FORMATS)
-    private _dateFormats: MatDateFormats,
-    private _changeDetectorRef: ChangeDetectorRef
+    private _dateFormats: MatDateFormats
   ) {
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
@@ -116,9 +144,7 @@ export class MatYearsView<D> implements AfterContentInit {
 
   /** Initializes this year view. */
   _init() {
-    this._selectedYear = this._dateAdapter.getYear(
-      this.selected ? this.selected : this.activeDate
-    );
+    this._selectedYear = this._dateAdapter.getYear(this.selected ? this.selected : this.activeDate);
 
     const date = this._dateAdapter.createDate(
       this._selectedYear,
@@ -137,16 +163,12 @@ export class MatYearsView<D> implements AfterContentInit {
     this._populateYears();
 
     setTimeout(() => {
-      this.element.nativeElement.scrollTop -=
-        this.element.nativeElement.offsetHeight / 2 - YEAR_LINE_HEIGHT / 2;
+      this.element.nativeElement.scrollTop -= this.element.nativeElement.offsetHeight / 2 - YEAR_LINE_HEIGHT / 2;
     }, 20);
   }
 
   _populateYears(down = false) {
-    if (
-      (!down && !this._years[0].enabled) ||
-      (down && !this._years[this._years.length - 1].enabled)
-    ) {
+    if ((!down && !this._years[0].enabled) || (down && !this._years[this._years.length - 1].enabled)) {
       return;
     }
 
@@ -158,26 +180,14 @@ export class MatYearsView<D> implements AfterContentInit {
     let scroll = 0;
     for (let y = 1; y <= 10; y++) {
       let year = this._years[this._years.length - 1].value;
-      let date = this._dateAdapter.createDate(
-        year + 1,
-        selectedMonth,
-        selectedDay,
-        selectedHours,
-        selectedMinutes
-      );
+      let date = this._dateAdapter.createDate(year + 1, selectedMonth, selectedDay, selectedHours, selectedMinutes);
       this._years.push({
         value: year + 1,
         enabled: !this.dateFilter || this.dateFilter(date, 'minute')
       });
 
       year = this._years[0].value;
-      date = this._dateAdapter.createDate(
-        year - 1,
-        selectedMonth,
-        selectedDay,
-        selectedHours,
-        selectedMinutes
-      );
+      date = this._dateAdapter.createDate(year - 1, selectedMonth, selectedDay, selectedHours, selectedMinutes);
       this._years.unshift({
         value: year - 1,
         enabled: !this.dateFilter || this.dateFilter(date, 'minute')
@@ -199,13 +209,7 @@ export class MatYearsView<D> implements AfterContentInit {
     const selectedHours = this._dateAdapter.getHours(this.activeDate);
     const selectedMinutes = this._dateAdapter.getMinutes(this.activeDate);
     this.selectedChange.emit(
-      this._dateAdapter.createDate(
-        year,
-        selectedMonth,
-        selectedDay,
-        selectedHours,
-        selectedMinutes
-      )
+      this._dateAdapter.createDate(year, selectedMonth, selectedDay, selectedHours, selectedMinutes)
     );
   }
 
@@ -225,5 +229,38 @@ export class MatYearsView<D> implements AfterContentInit {
       this._populateYears(true);
     }
     lastPosition.scrolled = position.scrolled;
+  }
+
+  /** Handles keydown events on the calendar body when calendar is in multi-year view. */
+  _handleCalendarBodyKeydown(event: KeyboardEvent): void {
+    // TODO handle @angular/cdk/keycode
+    switch (event.keyCode) {
+      case UP_ARROW:
+        this.activeDate = this._dateAdapter.addCalendarYears(this._activeDate, -1);
+        break;
+      case DOWN_ARROW:
+        this.activeDate = this._dateAdapter.addCalendarYears(this._activeDate, 1);
+        break;
+      case ENTER:
+        this._yearSelected(this._dateAdapter.getYear(this._activeDate));
+        break;
+      default:
+        // Don't prevent default or focus active cell on keys that we don't explicitly handle.
+        return;
+    }
+
+    this._focusActiveCell();
+    // Prevent unexpected default actions such as form submission.
+    event.preventDefault();
+  }
+
+  _focusActiveCell() {}
+
+  /**
+   * @param obj The object to check.
+   * @returns The given object if it is both a date instance and valid, otherwise null.
+   */
+  private _getValidDateOrNull(obj: any): D | null {
+    return this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj) ? obj : null;
   }
 }
