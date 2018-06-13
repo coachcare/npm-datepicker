@@ -1,5 +1,7 @@
 # Material DatePicker by CoachCare
 
+Fork of the official Material Datepicker for Angular v6 with timepicker support.
+
 The datepicker allows users to enter a date either through text input, or by choosing a date from the calendar.  
 It is made up of several components and directives that work together.
 
@@ -65,7 +67,7 @@ Remember to include the styles to your app, and call the mixing with your theme:
 
 ## Usage Examples
 
-### DateTime picker (year, month, date and clock views)
+### DateTime picker (year, month, date and clock view)
 
 ```
 <mat-datepicker type="datetime" clockStep="5" #pickerStart></mat-datepicker>
@@ -77,41 +79,10 @@ Remember to include the styles to your app, and call the mixing with your theme:
 <mat-datepicker type="datetime" startView="clock" #startPicker></mat-datepicker>
 ```
 
-### Time picker (clock views, with 5 minutes jump)
+### Time picker (clock view, with 5 minutes jump)
 
 ```
 <mat-datepicker type="time" clockStep="5" #timeStart></mat-datepicker>
-```
-
-### Two timepickers connected each other
-
-`pickerEnd` will update its date on `pickerStart` selected change,
-and will emit the selectedChanged too.
-
-```
-<mat-form-field>
-  <input matInput required formControlName="startTime"
-    [min]="minStart" [max]="maxStart" (dateChange)="onChange()"
-    [matDatepicker]="pickerStart" [placeholder]="'START_TIME' | translate" readonly="true">
-  <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
-  <mat-datepicker type="time" clockStep="5" #pickerStart></mat-datepicker>
-</mat-form-field>
-
-<mat-form-field>
-  <input matInput required formControlName="endTime" [min]="minEnd"
-    [matDatepicker]="pickerEnd" [placeholder]="'END_TIME' | translate" readonly="true">
-  <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
-  <mat-datepicker type="time" clockStep="5" #pickerEnd [matDatepicker]="pickerStart"></mat-datepicker>
-</mat-form-field>
-```
-
-with
-
-```
-onChange() {
-  const start = this.form.get('startTime').value;
-  this.minEnd = moment(start).add(15, 'minutes');
-}
 ```
 
 ## Contribute
