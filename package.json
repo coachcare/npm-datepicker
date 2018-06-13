@@ -18,12 +18,13 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "lint": "ng lint",
+    "build": "ng build",
     "dist": "npm run dist:pkg && npm run dist:scss && node ./scripts/dist.js",
     "dist:pkg": "rimraf dist && ng-packagr -p package.json",
     "dist:scss": "scss-bundle -e ./src/datepicker/theming.scss -d ./dist/_theming.scss",
     "commitmsg": "commitlint -e",
     "debug": "DEBUG=true ng-packagr -p package.json",
-    "lint": "ng lint",
     "preupload": "npm run dist",
     "upload": "npm publish --access=public dist/",
     "release": "standard-version --message 'build: release v%s'"
@@ -66,34 +67,10 @@
     "typescript": "~2.7.2",
     "zone.js": "^0.8.26"
   },
-  "peerDependencies": {
-    "@angular/cdk": "^6.0.0",
-    "@angular/material": "^6.0.0",
-    "moment": "*",
-    "moment-timezone": "*"
-  },
   "standard-version": {
     "scripts": {
       "postbump": "npm run dist",
       "posttag": "git push --follow-tags origin master"
     }
-  },
-  "ngPackage": {
-    "dest": "./dist",
-    "lib": {
-      "entryFile": "./src/datepicker/index.ts",
-      "umdModuleIds": {
-        "@angular/cdk": "ng.cdk",
-        "@angular/material": "ng.material",
-        "lodash": "_",
-        "moment": "moment",
-        "moment-timezone": "moment-timezone"
-      }
-    }
-  },
-  "main": "dist/bundles/coachcare-datepicker.umd.js",
-  "module": "dist/esm5/coachcare-datepicker.js",
-  "es2015": "dist/esm2015/coachcare-datepicker.js",
-  "typings": "dist/coachcare-datepicker.d.ts",
-  "metadata": "dist/coachcare-datepicker.metadata.json"
+  }
 }

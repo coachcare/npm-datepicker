@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "baseUrl": "",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
@@ -17,10 +18,10 @@
     ],
     "paths": {
       "@coachcare/datepicker": [
-        "dist/datepicker"
+        "./datepicker/src/lib/"
       ],
       "@coachcare/datepicker/*": [
-        "dist/datepicker/*"
+        "./datepicker/src/lib/*"
       ]
     }
   }
