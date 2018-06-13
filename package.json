@@ -21,10 +21,9 @@
     "lint": "ng lint",
     "build": "ng build",
     "dist": "npm run dist:pkg && npm run dist:scss && node ./scripts/dist.js",
-    "dist:pkg": "rimraf dist && ng-packagr -p package.json",
-    "dist:scss": "scss-bundle -e ./src/datepicker/theming.scss -d ./dist/_theming.scss",
+    "dist:pkg": "ng build datepicker -c production",
+    "dist:scss": "scss-bundle -e ./datepicker/src/lib/theming.scss -d ./dist/_theming.scss",
     "commitmsg": "commitlint -e",
-    "debug": "DEBUG=true ng-packagr -p package.json",
     "preupload": "npm run dist",
     "upload": "npm publish --access=public dist/",
     "release": "standard-version --message 'build: release v%s'"

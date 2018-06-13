@@ -5,14 +5,13 @@ cpx.copy('LICENSE', './dist');
 cpx.copy('README.md', './dist');
 cpx.copy('CHANGELOG.md', './dist');
 
-// datepicker
-let packageJson = JSON.parse(fs.readFileSync('./dist/package.json'));
+let packageJson = JSON.parse(fs.readFileSync('package.json', {
+  encoding: 'utf8'
+}));
+const version = packageJson['version'];
 
-delete packageJson['$schema'];
-delete packageJson['devDependencies'];
-delete packageJson['scripts'];
-delete packageJson['private'];
-delete packageJson['ngPackage'];
-delete packageJson['files'];
+// datepicker
+packageJson = JSON.parse(fs.readFileSync('./dist/package.json'));
+packageJson['version'] = version;
 
 fs.writeFileSync('./dist/package.json', JSON.stringify(packageJson, undefined, 2));
