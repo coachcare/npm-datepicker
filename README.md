@@ -53,21 +53,49 @@ export class AppModule {}
 ```
 
 **Note** that the `MatDatepickerModule` can be loaded into feature modules,  
-but take in account that it requires the providers given by `MatMomentDateModule`.
+but it requires the providers given by `MatMomentDateModule`,  
+so it's recommended to be imported in your root Module.
 
-### Theming
+## Styling
 
-Remember to include the styles to your app, and call the mixing with your theme:
+This module supports the Angular Material prebuilt themes that can be included in `angular.json`:
 
 ```
-@import 'node_modules/@coachcare/datepicker/theming'
-
-@include mat-datepicker($theme);
+"styles": [
+  "node_modules/@coachcare/datepicker/prebuilt-themes/indigo-pink.css",
+  "styles.css"
+],
 ```
+
+available themes are `deeppurple-amber`, `indigo-pink`, `pink-bluegrey` and `purple-green`.
+
+You can use your customized Material Theme as usual:
+
+```
+@import '~@coachcare/datepicker/theming';
+
+@include mat-datepicker-theme($theme);
+```
+
+Also, the primary color can be customized with CSS variables. The required ones are:
+
+```
+body {
+  --primary: rgba(73, 200, 242, 1);
+  --primary-contrast: #fff;
+  --primary-a60: rgba(73, 200, 242, 0.6);
+  --primary-a80: rgba(73, 200, 242, 0.8);
+}
+```
+
+## Date Formats Customization
+
+This fork uses an extended set of DateFormats,  
+so please check [this file](https://github.com/selvera/npm-datepicker/blob/master/datepicker/src/lib/moment-adapter/moment-date-formats.ts#L11) if you're building your own.
 
 ## Usage Examples
 
-### DateTime picker (year, month, date and clock view)
+### DateTime picker (year, month, date and clock views)
 
 ```
 <mat-datepicker type="datetime" clockStep="5" #pickerStart></mat-datepicker>
@@ -79,7 +107,7 @@ Remember to include the styles to your app, and call the mixing with your theme:
 <mat-datepicker type="datetime" startView="clock" #startPicker></mat-datepicker>
 ```
 
-### Time picker (clock view, with 5 minutes jump)
+### Time picker (clock views, with 5 minutes jump)
 
 ```
 <mat-datepicker type="time" clockStep="5" #timeStart></mat-datepicker>
@@ -88,5 +116,4 @@ Remember to include the styles to your app, and call the mixing with your theme:
 ## Contribute
 
 Feedback and suggestions are welcome, also gratitude demonstrations :)
-
 Enjoy!
