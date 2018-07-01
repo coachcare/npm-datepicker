@@ -77,13 +77,13 @@ export class MatDatepickerIntl implements MatDatepickerIntlCatalog {
   /** A label for the 'switch to years view' button (used by screen readers). */
   switchToYearsViewLabel = 'Change to years view';
 
-  /** Text for the 'submit' button (used by screen readers). */
+  /** Text for the 'submit' button. */
   buttonSubmitText = 'Ok';
 
   /** A label for the 'submit' button (used by screen readers). */
   buttonSubmitLabel = 'Choose the current date';
 
-  /** Text for the 'cancel' button (used by screen readers). */
+  /** Text for the 'cancel' button. */
   buttonCancelText = 'Cancel';
 
   /** A label for the 'cancel' button (used by screen readers). */

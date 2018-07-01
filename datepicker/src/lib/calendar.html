@@ -4,7 +4,7 @@
     <button class="mat-calendar-header-date-year mat-calendar-control"
     [class.mat-calendar-control-active]="view == 'years'"
     [@controlActive]="view == 'years' ? 'active' : ''"
-    [attr.aria-label]="_controlLabel('switchToYearViewLabel')"
+    [attr.aria-label]="_intl.switchToYearViewLabel"
     (click)="changeView('years')">
       {{ _yearButtonText }}
     </button>
@@ -12,7 +12,7 @@
     <button class="mat-calendar-header-date-month mat-calendar-control"
     [class.mat-calendar-control-active]="view == 'month' || view == 'year'"
     [@controlActive]="view == 'month' || view == 'year' ? 'active' : ''"
-    [attr.aria-label]="_controlLabel('switchToMonthViewLabel')"
+    [attr.aria-label]="_intl.switchToMonthViewLabel"
     (click)="changeView('month')">
       <span class="mat-calendar-header-date-dayname">{{ _dayButtonText }}, </span>
       <span class="mat-calendar-header-date-monthday">{{ _monthdayButtonText }}</span>
@@ -24,7 +24,7 @@
       <button class="mat-calendar-control"
       [class.mat-calendar-control-active]="view == 'clock' && _hourView"
       [@controlActive]="view == 'clock' && _hourView ? 'active' : ''"
-      [attr.aria-label]="_controlLabel('switchToHourViewLabel')"
+      [attr.aria-label]="_intl.switchToHourViewLabel"
       (click)="_showHourView()">
         {{ _hourButtonText }}
       </button>
@@ -32,7 +32,7 @@
       <button class="mat-calendar-control"
       [class.mat-calendar-control-active]="view == 'clock' && !_hourView"
       [@controlActive]="view == 'clock' && !_hourView ? 'active' : ''"
-      [attr.aria-label]="_controlLabel('switchToMinuteViewLabel')"
+      [attr.aria-label]="_intl.switchToMinuteViewLabel"
       (click)="_showMinuteView()">
         {{ _minuteButtonText }}
       </button>
@@ -41,14 +41,14 @@
       <button class="mat-calendar-control"
       [class.mat-calendar-control-active]="_isAm"
       [@controlActive]="_isAm ? 'active' : ''"
-      [attr.aria-label]="_controlLabel('setToAMLabel')"
+      [attr.aria-label]="_intl.setToAMLabel"
       (click)="_toggleAmPm(true)">
         AM
       </button>
       <button class="mat-calendar-control"
       [class.mat-calendar-control-active]="!_isAm"
       [@controlActive]="!_isAm ? 'active' : ''"
-      [attr.aria-label]="_controlLabel('setToPMLabel')"
+      [attr.aria-label]="_intl.setToPMLabel"
       (click)="_toggleAmPm(false)">
         PM
       </button>
@@ -60,7 +60,7 @@
 
   <div class="mat-calendar-heading" *ngIf="view === 'month' || view === 'year'">
     <button mat-icon-button class="mat-calendar-previous-button"
-      (click)="_previousClicked()" [disabled]="!_previousEnabled()"
+      (click)="_previousClicked()" [attr.disabled]="!_previousEnabled() ? '' : null"
       [attr.aria-label]="_prevButtonLabel">
     </button>
 
@@ -72,7 +72,7 @@
     </button>
 
     <button mat-icon-button class="mat-calendar-next-button"
-      (click)="_nextClicked()" [disabled]="!_nextEnabled()"
+      (click)="_nextClicked()" [attr.disabled]="!_nextEnabled() ? '' : null"
       [attr.aria-label]="_nextButtonLabel">
     </button>
   </div>
@@ -129,14 +129,14 @@
   <div class="mat-calendar-footer">
     <button mat-button
     (click)="_cancelClicked()"
-    [attr.aria-label]="_controlLabel('buttonCancelLabel')">
-      {{ _controlLabel('buttonCancelText') }}
+    [attr.aria-label]="_intl.buttonCancelLabel">
+      {{ _intl.buttonCancelText }}
     </button>
 
     <button mat-button
     (click)="_submitClicked()"
-    [attr.aria-label]="_controlLabel('buttonSubmitLabel')">
-      {{ _controlLabel('buttonSubmitText') }}
+    [attr.aria-label]="_intl.buttonSubmitLabel">
+      {{ _intl.buttonSubmitText }}
     </button>
   </div>
 </div>

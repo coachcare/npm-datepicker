@@ -257,7 +257,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnCha
   _nextButtonLabel: string;
 
   constructor(
-    private _intl: MatDatepickerIntl,
+    public _intl: MatDatepickerIntl,
     @Optional() private _dateAdapter: DateAdapter<D>,
     @Optional()
     @Inject(MAT_DATE_FORMATS)
@@ -345,11 +345,6 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnCha
 
   _cancelClicked(): void {
     this._userSelection.emit();
-  }
-
-  /** Accesor to private _intl */
-  _controlLabel(key: keyof MatDatepickerIntl): string {
-    return this._intl[key] as string;
   }
 
   /** Handles date selection in the clock view. */
