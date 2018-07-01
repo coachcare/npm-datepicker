@@ -63,7 +63,7 @@ This module supports the Angular Material prebuilt themes that can be included i
 ```
 "styles": [
   "node_modules/@coachcare/datepicker/prebuilt-themes/indigo-pink.css",
-  "styles.css"
+  ...
 ],
 ```
 
