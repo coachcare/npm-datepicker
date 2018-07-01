@@ -27,9 +27,10 @@ The `mat-datepicker` has the following _input_ parameters:
 - `disabled`: whether the datepicker pop-up should be disabled
 - `matDatepicker`: whether the datepicker is connected to a date type one
 
-and the following _output_:
+and the `input[matDatepicker]` has the _output_:
 
-- `selectedChanged`: emits new selected date when selected date changes
+- `dateChange`: Emits when a `change` event is fired on this `<input>`.
+- `dateInput`: Emits when a `input` event is fired on this `<input>`.
 
 ## Installation
 
@@ -116,4 +117,6 @@ so please check [this file](https://github.com/selvera/npm-datepicker/blob/maste
 ## Contribute
 
 Feedback and suggestions are welcome, also gratitude demonstrations :)
+https://www.paypal.me/mateotp
+
 Enjoy!
