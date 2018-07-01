@@ -23,7 +23,12 @@ import { take } from 'rxjs/operators';
  * @docs-private
  */
 export class MatCalendarCell {
-  constructor(public value: number, public displayValue: string, public ariaLabel: string, public enabled: boolean) {}
+  constructor(
+    public value: number,
+    public displayValue: string,
+    public ariaLabel: string,
+    public enabled: boolean
+  ) {}
 }
 
 /**
@@ -92,7 +97,9 @@ export class MatCalendarBody {
 
   /** The number of blank cells to put at the beginning for the first row. */
   get _firstRowOffset(): number {
-    return this.rows && this.rows.length && this.rows[0].length ? this.numCols - this.rows[0].length : 0;
+    return this.rows && this.rows.length && this.rows[0].length
+      ? this.numCols - this.rows[0].length
+      : 0;
   }
 
   _isActiveCell(rowIndex: number, colIndex: number): boolean {

@@ -9,7 +9,13 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ESCAPE, UP_ARROW } from '@angular/cdk/keycodes';
-import { Overlay, OverlayConfig, OverlayRef, PositionStrategy, ScrollStrategy } from '@angular/cdk/overlay';
+import {
+  Overlay,
+  OverlayConfig,
+  OverlayRef,
+  PositionStrategy,
+  ScrollStrategy
+} from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
 import {
@@ -33,8 +39,9 @@ import {
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { take, filter } from 'rxjs/operators';
 import { merge, Subject, Subscription } from 'rxjs';
-import { MatCalendar } from './calendar';
+import { MatCalendar, MatCalendarType, MatCalendarView } from './calendar';
 import { DateAdapter } from './core/index';
+import { fadeInCalendar, transformPanel } from './datepicker-animations';
 import { createMissingDateImplError } from './datepicker-errors';
 import { MatDatepickerInput } from './datepicker-input';
 
@@ -71,9 +78,11 @@ export const MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
   // styleUrls: ['datepicker-content.scss'],
   host: {
     class: 'mat-datepicker-content',
+    '[@transformPanel]': '"enter"',
     '[class.mat-datepicker-content-touch]': 'datepicker.touchUi',
     '(keydown)': '_handleKeydown($event)'
   },
+  animations: [transformPanel, fadeInCalendar],
   exportAs: 'matDatepickerContent',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -132,10 +141,10 @@ export class MatDatepicker<D> implements OnInit, OnDestroy {
   private _startAt: D | null;
 
   /** The type of value handled by the calendar. */
-  @Input() type: 'date' | 'datetime' | 'time' = 'date';
+  @Input() type: MatCalendarType = 'date';
 
   /** Which view the calendar should be started in. */
-  @Input() startView: 'clock' | 'month' | 'year' | 'years' = 'month';
+  @Input() startView: MatCalendarView = 'month';
 
   /** Clock interval */
   @Input() clockStep = 1;
@@ -159,7 +168,9 @@ export class MatDatepicker<D> implements OnInit, OnDestroy {
   /** Whether the datepicker pop-up should be disabled. */
   @Input()
   get disabled(): boolean {
-    return this._disabled === undefined && this._datepickerInput ? this._datepickerInput.disabled : !!this._disabled;
+    return this._disabled === undefined && this._datepickerInput
+      ? this._datepickerInput.disabled
+      : !!this._disabled;
   }
   set disabled(value: boolean) {
     const newValue = coerceBooleanProperty(value);
@@ -341,7 +352,8 @@ export class MatDatepicker<D> implements OnInit, OnDestroy {
     this._datepickerInput = input;
     this._inputSubscription = this._datepickerInput._valueChange.subscribe(
       (value: D | null) =>
-        (this._selected = value && this._dateAdapter.isDateInstance(value) ? this._dateAdapter.clone(value) : null)
+        (this._selected =
+          value && this._dateAdapter.isDateInstance(value) ? this._dateAdapter.clone(value) : null)
     );
   }
 
@@ -388,7 +400,10 @@ export class MatDatepicker<D> implements OnInit, OnDestroy {
       }
     };
 
-    if (this._focusedElementBeforeOpen && typeof this._focusedElementBeforeOpen.focus === 'function') {
+    if (
+      this._focusedElementBeforeOpen &&
+      typeof this._focusedElementBeforeOpen.focus === 'function'
+    ) {
       // Because IE moves focus asynchronously, we can't count on it being restored before we've
       // marked the datepicker as closed. If the event fires out of sequence and the element that
       // we're refocusing opens the datepicker on focus, the user could be stuck with not being
@@ -416,7 +431,10 @@ export class MatDatepicker<D> implements OnInit, OnDestroy {
   /** Open the calendar as a popup. */
   private _openAsPopup(): void {
     if (!this._calendarPortal) {
-      this._calendarPortal = new ComponentPortal<MatDatepickerContent<D>>(MatDatepickerContent, this._viewContainerRef);
+      this._calendarPortal = new ComponentPortal<MatDatepickerContent<D>>(
+        MatDatepickerContent,
+        this._viewContainerRef
+      );
     }
 
     if (!this._popupRef) {
@@ -456,7 +474,10 @@ export class MatDatepicker<D> implements OnInit, OnDestroy {
       this._popupRef.keydownEvents().pipe(
         filter(event => {
           // Closing on alt + up is only valid when there's an input associated with the datepicker.
-          return event.keyCode === ESCAPE || (this._datepickerInput && event.altKey && event.keyCode === UP_ARROW);
+          return (
+            event.keyCode === ESCAPE ||
+            (this._datepickerInput && event.altKey && event.keyCode === UP_ARROW)
+          );
         })
       )
     ).subscribe(() => this.close());

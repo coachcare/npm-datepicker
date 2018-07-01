@@ -41,6 +41,12 @@ import { MatYearsView } from './years-view';
 export type MatCalendarView = 'clock' | 'month' | 'year' | 'years';
 
 /**
+ * Possible return types.
+ * @docs-private
+ */
+export type MatCalendarType = 'date' | 'datetime' | 'time';
+
+/**
  * A calendar that is used as part of the datepicker.
  * @docs-private
  */
@@ -77,7 +83,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnCha
   private _startAt: D | null;
 
   /** The type of value handled by the calendar. */
-  @Input() type: 'date' | 'datetime' | 'time' = 'date';
+  @Input() type: MatCalendarType = 'date';
 
   /** Which view the calendar should be started in. */
   @Input() startView: MatCalendarView = 'month';
@@ -183,10 +189,16 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnCha
         this._periodButtonText = this._dateAdapter.getYearName(this.activeDate);
         break;
       default:
-        this._periodButtonText = this._dateAdapter.format(this.activeDate, this._dateFormats.display.monthYearLabel);
+        this._periodButtonText = this._dateAdapter.format(
+          this.activeDate,
+          this._dateFormats.display.monthYearLabel
+        );
     }
     this._yearButtonText = this._dateAdapter.getYear(this.activeDate).toString();
-    this._monthdayButtonText = this._dateAdapter.format(this.activeDate, this._dateFormats.display.monthDayLabel);
+    this._monthdayButtonText = this._dateAdapter.format(
+      this.activeDate,
+      this._dateFormats.display.monthDayLabel
+    );
     this._dayButtonText = this._dateAdapter.getDayOfWeekNames('short')[day];
     this._hourButtonText = hours.toString();
     this._minuteButtonText = ('00' + minutes).slice(-2);
@@ -269,7 +281,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnCha
   ngAfterContentInit() {
     this.activeDate = this.startAt || this._dateAdapter.today();
 
-    this.changeView(this.startView);
+    this.changeView(this.startView, false);
   }
 
   ngAfterViewChecked() {
@@ -298,7 +310,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnCha
     this.stateChanges.next();
   }
 
-  changeView(view) {
+  changeView(view, focus = true) {
     switch (view) {
       case 'year':
         this._periodButtonText = this._dateAdapter.getYearName(this.activeDate);
@@ -307,13 +319,19 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnCha
         this._prevButtonLabel = this._intl.prevYearLabel;
         break;
       case 'month':
-        this._periodButtonText = this._dateAdapter.format(this.activeDate, this._dateFormats.display.monthYearLabel);
+        this._periodButtonText = this._dateAdapter.format(
+          this.activeDate,
+          this._dateFormats.display.monthYearLabel
+        );
         this._periodButtonLabel = this._intl.switchToYearViewLabel;
         this._nextButtonLabel = this._intl.nextMonthLabel;
         this._prevButtonLabel = this._intl.prevMonthLabel;
     }
 
     this.view = view;
+    if (focus) {
+      this._moveFocusOnNextTick = true;
+    }
   }
 
   focusActiveCell() {
@@ -440,10 +458,15 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnCha
         return this._dateAdapter.getYear(date1) === this._dateAdapter.getYear(date2);
       case 'month':
         const monthYear = this._dateFormats.display.monthYearLabel;
-        return this._dateAdapter.format(date1, monthYear) === this._dateAdapter.format(date2, monthYear);
+        return (
+          this._dateAdapter.format(date1, monthYear) === this._dateAdapter.format(date2, monthYear)
+        );
       case 'clock':
         const hourMinute = this._dateFormats.display.timeLabel;
-        return this._dateAdapter.format(date1, hourMinute) === this._dateAdapter.format(date2, hourMinute);
+        return (
+          this._dateAdapter.format(date1, hourMinute) ===
+          this._dateAdapter.format(date2, hourMinute)
+        );
     }
   }
 

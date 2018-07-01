@@ -14,8 +14,7 @@
   $mat-calendar-body-cell-content-border-width: 1px !default;
 
   $mat-calendar-body-min-size: 7 * $mat-calendar-body-cell-min-size !default;
-  $mat-calendar-body-cell-content-size: 100% - $mat-calendar-body-cell-content-margin
-    !default;
+  $mat-calendar-body-cell-content-size: 100% - $mat-calendar-body-cell-content-margin !default;
 
   .mat-calendar-body {
     min-width: $mat-calendar-body-min-size;
@@ -42,6 +41,10 @@
     text-align: center;
     outline: none;
     cursor: pointer;
+  }
+
+  .mat-calendar-body-disabled {
+    cursor: default;
   }
 
   .mat-calendar-body-cell-background {
@@ -83,15 +86,14 @@
 
       padding-left: $mat-calendar-body-cell-content-size / 3;
       padding-right: $mat-calendar-body-cell-content-size / 3;
-      height: $mat-calendar-body-cell-content-size -
-        $mat-calendar-body-cell-content-margin;
+      height: $mat-calendar-body-cell-content-size - $mat-calendar-body-cell-content-margin;
     }
   }
 
   .mat-calendar-body-cell:hover:not(.mat-calendar-body-disabled) {
     .mat-calendar-body-cell-background {
-      background: mat-color($primary, 0.5);
-      color: mat-color($primary, 0.5);
+      background: var(--primary-a60, mat-color($primary, 0.5));
+      color: var(--primary-a60, mat-color($primary, 0.5));
       opacity: 1;
       transform: scale(1);
     }
@@ -105,12 +107,12 @@
   }
 
   .mat-calendar-body-selected {
-    background: mat-color($primary, 0.8);
-    color: mat-color($primary, 0.8);
+    background: var(--primary-a80, mat-color($primary, 0.8));
+    color: var(--primary-a80, mat-color($primary, 0.8));
   }
 
   .mat-calendar-body-active:not(.mat-calendar-body-today) {
-    color: mat-color($primary, 0.5);
+    color: var(--primary-a60, mat-color($primary, 0.5));
   }
 
   .mat-calendar-body-disabled {

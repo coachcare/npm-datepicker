@@ -10,9 +10,9 @@ import { MatDateFormats } from '../core/index';
 
 export const MAT_MOMENT_DATE_FORMATS: MatDateFormats = {
   parse: {
-    date: 'YYYY-MM-DD',
-    datetime: 'YYYY-MM-DD HH:mm',
-    time: 'HH:mm'
+    date: ['YYYY-MM-DD', 'YYYY/MM/DD', 'll'],
+    datetime: ['YYYY-MM-DD HH:mm', 'YYYY/MM/DD HH:mm', 'll h:mma'],
+    time: ['H:mm', 'HH:mm', 'h:mm a', 'hh:mm a']
   },
   display: {
     date: 'll',

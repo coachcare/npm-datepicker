@@ -20,7 +20,7 @@ import {
   SimpleChanges,
   ViewEncapsulation
 } from '@angular/core';
-import { merge, of as observableOf, Subscription } from 'rxjs';
+import { merge, of as obsOf, Subscription } from 'rxjs';
 import { MatDatepicker } from './datepicker';
 import { MatDatepickerIntl } from './datepicker-intl';
 
@@ -35,7 +35,8 @@ export class MatDatepickerToggleIcon {}
   templateUrl: 'datepicker-toggle.html',
   // styleUrls: ['datepicker-toggle.css'],
   host: {
-    class: 'mat-datepicker-toggle'
+    class: 'mat-datepicker-toggle',
+    '[class.mat-datepicker-toggle-active]': 'datepicker && datepicker.opened'
   },
   exportAs: 'matDatepickerToggle',
   encapsulation: ViewEncapsulation.None,
@@ -85,20 +86,23 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
   }
 
   private _watchStateChanges() {
-    const datepickerDisabled = this.datepicker ? this.datepicker._disabledChange : observableOf();
+    const datepickerDisabled = this.datepicker ? this.datepicker._disabledChange : obsOf();
 
     const inputDisabled =
       this.datepicker && this.datepicker._datepickerInput
         ? this.datepicker._datepickerInput._disabledChange
-        : observableOf();
+        : obsOf();
 
     const datepickerToggled = this.datepicker
       ? merge(this.datepicker.openedStream, this.datepicker.closedStream)
-      : observableOf();
+      : obsOf();
 
     this._stateChanges.unsubscribe();
-    this._stateChanges = merge(this._intl.changes, datepickerDisabled, inputDisabled, datepickerToggled).subscribe(() =>
-      this._changeDetectorRef.markForCheck()
-    );
+    this._stateChanges = merge(
+      this._intl.changes,
+      datepickerDisabled,
+      inputDisabled,
+      datepickerToggled
+    ).subscribe(() => this._changeDetectorRef.markForCheck());
   }
 }
