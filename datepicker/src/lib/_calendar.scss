@@ -183,7 +183,8 @@
           .mat-calendar-header-date-dayname {
             display: none;
           }
-          .mat-calendar-header-time-hour {
+          .mat-calendar-header-time-hour,
+          .mat-calendar-header-time-hour > button {
             font-size: 36px;
             line-height: 42px;
           }
@@ -225,7 +226,8 @@
           place-content: center flex-start;
           padding: 0 $mat-calendar-padding * 2;
 
-          .mat-calendar-header-time-hour {
+          .mat-calendar-header-time-hour,
+          .mat-calendar-header-time-hour > button {
             font-size: 32px;
             line-height: 40px;
           }
