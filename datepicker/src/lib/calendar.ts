@@ -171,7 +171,8 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnCha
     this._clampedActiveDate = this._dateAdapter.clampDate(value, this.minDate, this.maxDate);
     this._isAm = this._dateAdapter.getHours(this._clampedActiveDate) < 12;
 
-    const diff = this._dateAdapter.compareDate(oldActiveDate, this._clampedActiveDate, 'month');
+    const unit = this.view === 'year' ? 'year' : 'month';
+    const diff = this._dateAdapter.compareDate(oldActiveDate, this._clampedActiveDate, unit);
     if (diff) {
       this._animationDir = diff > 0 ? 'left' : 'right';
     }

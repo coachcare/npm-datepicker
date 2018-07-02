@@ -81,12 +81,12 @@
 
     <mat-clock-view
       *ngSwitchCase="'clock'"
+      [(activeDate)]="activeDate"
+      [selected]="selected"
+      [dateFilter]="_dateFilterForViews"
       [clockStep]="clockStep"
       [twelveHour]="twelveHour"
       [hourView]="_hourView"
-      [activeDate]="activeDate"
-      [selected]="selected"
-      [dateFilter]="_dateFilterForViews"
       (selectedTime)="_timeSelected($event)"
       (selectedChange)="_timeChanged($event)"
       (changeView)="_hourView = !_hourView">
@@ -94,7 +94,7 @@
 
     <mat-month-view
       *ngSwitchCase="'month'"
-      [activeDate]="activeDate"
+      [(activeDate)]="activeDate"
       [selected]="selected"
       [dateFilter]="_dateFilterForViews"
       [maxDate]="maxDate"
@@ -106,7 +106,7 @@
 
     <mat-year-view
       *ngSwitchCase="'year'"
-      [activeDate]="activeDate"
+      [(activeDate)]="activeDate"
       [selected]="selected"
       [dateFilter]="_dateFilterForViews"
       [maxDate]="maxDate"

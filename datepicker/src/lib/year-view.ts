@@ -58,10 +58,14 @@ export class MatYearView<D> implements AfterContentInit {
   }
   set activeDate(value: D) {
     const oldActiveDate = this._activeDate;
-    const validDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value)) || this._dateAdapter.today();
+    const validDate =
+      this._getValidDateOrNull(this._dateAdapter.deserialize(value)) || this._dateAdapter.today();
     this._activeDate = this._dateAdapter.clampDate(validDate, this.minDate, this.maxDate);
 
-    if (oldActiveDate && this._dateAdapter.getYear(oldActiveDate) !== this._dateAdapter.getYear(this._activeDate)) {
+    if (
+      oldActiveDate &&
+      this._dateAdapter.getYear(oldActiveDate) !== this._dateAdapter.getYear(this._activeDate)
+    ) {
       this._init();
     }
   }
@@ -106,6 +110,9 @@ export class MatYearView<D> implements AfterContentInit {
 
   /** Emits when a new month is selected. */
   @Output() readonly selectedChange = new EventEmitter<D>();
+
+  /** Emits when any date is activated. */
+  @Output() readonly activeDateChange = new EventEmitter<D>();
 
   /** The body of calendar table */
   @ViewChild(MatCalendarBody) _matCalendarBody: MatCalendarBody;
@@ -195,7 +202,12 @@ export class MatYearView<D> implements AfterContentInit {
       this._dateAdapter.createDate(this._dateAdapter.getYear(this.activeDate), month, 1),
       this._dateFormats.display.monthYearA11yLabel
     );
-    return new MatCalendarCell(month, monthName.toLocaleUpperCase(), ariaLabel, this._shouldEnableMonth(month));
+    return new MatCalendarCell(
+      month,
+      monthName.toLocaleUpperCase(),
+      ariaLabel,
+      this._shouldEnableMonth(month)
+    );
   }
 
   /** Whether the given month is enabled. */
@@ -218,7 +230,11 @@ export class MatYearView<D> implements AfterContentInit {
     const firstOfMonth = this._dateAdapter.createDate(activeYear, month, 1);
 
     // If any date in the month is enabled count the month as enabled.
-    for (let d = firstOfMonth; this._dateAdapter.getMonth(d) == month; d = this._dateAdapter.addCalendarDays(d, 1)) {
+    for (
+      let d = firstOfMonth;
+      this._dateAdapter.getMonth(d) == month;
+      d = this._dateAdapter.addCalendarDays(d, 1)
+    ) {
       if (this.dateFilter(d, 'day')) {
         return true;
       }
@@ -261,8 +277,9 @@ export class MatYearView<D> implements AfterContentInit {
     // disabled ones from being selected. This may not be ideal, we should look into whether
     // navigation should skip over disabled dates, and if so, how to implement that efficiently.
 
-    const isRtl = this._isRtl();
+    const oldActiveDate = this._activeDate;
 
+    const isRtl = this._isRtl();
     switch (event.keyCode) {
       case LEFT_ARROW:
         this.activeDate = this._dateAdapter.addCalendarMonths(this._activeDate, isRtl ? 1 : -1);
@@ -289,10 +306,16 @@ export class MatYearView<D> implements AfterContentInit {
         );
         break;
       case PAGE_UP:
-        this.activeDate = this._dateAdapter.addCalendarYears(this._activeDate, event.altKey ? -10 : -1);
+        this.activeDate = this._dateAdapter.addCalendarYears(
+          this._activeDate,
+          event.altKey ? -10 : -1
+        );
         break;
       case PAGE_DOWN:
-        this.activeDate = this._dateAdapter.addCalendarYears(this._activeDate, event.altKey ? 10 : 1);
+        this.activeDate = this._dateAdapter.addCalendarYears(
+          this._activeDate,
+          event.altKey ? 10 : 1
+        );
         break;
       case ENTER:
         this._monthSelected(this._dateAdapter.getMonth(this._activeDate));
@@ -300,6 +323,10 @@ export class MatYearView<D> implements AfterContentInit {
       default:
         // Don't prevent default or focus active cell on keys that we don't explicitly handle.
         return;
+    }
+
+    if (this._dateAdapter.compareDate(oldActiveDate, this.activeDate)) {
+      this.activeDateChange.emit(this.activeDate);
     }
 
     this._focusActiveCell();
