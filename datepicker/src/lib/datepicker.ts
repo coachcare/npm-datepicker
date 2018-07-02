@@ -374,6 +374,10 @@ export class MatDatepicker<D> implements OnInit, OnDestroy {
     this.openedStream.emit();
   }
 
+  reset(value?: D | null) {
+    this._datepickerInput.reset(value);
+  }
+
   /** Close the calendar. */
   close(): void {
     if (!this._opened) {

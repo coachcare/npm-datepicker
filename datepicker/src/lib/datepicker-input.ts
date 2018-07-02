@@ -121,9 +121,9 @@ export class MatDatepickerInput<D>
   }
   set value(value: D | null) {
     value = this._dateAdapter.deserialize(value);
+    this._lastValueValid = !value || this._dateAdapter.isValid(value);
     value = this._getValidDateOrNull(value);
 
-    const type = this._datepicker.type;
     const oldDate = this.value;
     this._value = value;
     this._formatValue(value);
@@ -133,6 +133,7 @@ export class MatDatepickerInput<D>
     }
   }
   private _value: D | null;
+  private _firstValue: D | null;
 
   /** The minimum valid date. */
   @Input()
@@ -284,6 +285,11 @@ export class MatDatepickerInput<D>
     this._disabledChange.complete();
   }
 
+  reset(value?: D | null): void {
+    this.value = value !== undefined ? value : this._firstValue;
+    this._cvaOnChange(this._value);
+  }
+
   registerOnValidatorChange(fn: () => void): void {
     this._validatorOnChange = fn;
   }
@@ -310,6 +316,9 @@ export class MatDatepickerInput<D>
 
   // Implemented as part of ControlValueAccessor
   writeValue(value: D): void {
+    if (this._firstValue === undefined) {
+      this._firstValue = value;
+    }
     this.value = value;
   }
 
@@ -346,6 +355,7 @@ export class MatDatepickerInput<D>
       this._valueChange.emit(date);
       this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
     }
+    // update on every (input) change
     this._cvaOnChange(date);
   }
 
