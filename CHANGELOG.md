@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.9.5"></a>
+## [0.9.5](https://github.com/selvera/npm-datepicker/compare/v0.9.4...v0.9.5) (2018-07-02)
+
+
+### Bug Fixes
+
+* avoid font-size conflicts with the datepicker controls. Closes [#12](https://github.com/selvera/npm-datepicker/issues/12) ([2d06771](https://github.com/selvera/npm-datepicker/commit/2d06771))
+
+
+
 <a name="0.9.0"></a>
 # [0.9.0](https://github.com/selvera/npm-datepicker/compare/v0.8.3...v0.9.0) (2018-06-13)
 
