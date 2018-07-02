@@ -5,10 +5,15 @@
 @import 'calendar-body';
 @import 'clock-view';
 
-@mixin mat-datepicker($theme) {
+@mixin mat-datepicker-theme($theme) {
   @include mat-datepicker-content($theme);
   @include mat-datepicker-toggle($theme);
   @include mat-calendar($theme);
   @include mat-calendar-body($theme);
   @include mat-clock($theme);
+}
+
+/* to deprecate in 1.0 */
+@mixin mat-datepicker($theme) {
+  @include mat-datepicker-theme($theme);
 }
