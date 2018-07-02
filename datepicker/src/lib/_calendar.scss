@@ -9,6 +9,7 @@
 @mixin mat-calendar($theme) {
   $primary: map-get($theme, primary);
   $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
 
   $mat-calendar-padding: 8px !default;
 
@@ -47,8 +48,8 @@
     }
 
     .mat-calendar-header {
-      background-color: mat-color($primary);
-      color: mat-color($primary, default-contrast);
+      background-color: var(--primary, mat-color($primary));
+      color: var(--primary-contrast, mat-color($primary, default-contrast));
       display: flex;
 
       .mat-calendar-header-date {
@@ -96,6 +97,7 @@
     }
 
     .mat-calendar-content {
+      background: var(--bg-dialog, mat-color($background, dialog));
       overflow: hidden;
       padding: $mat-calendar-padding;
 
@@ -111,7 +113,7 @@
       &.mat-calendar-view-month,
       &.mat-calendar-view-year {
         .mat-calendar-main {
-          height: calc(100% - 37px - 38px);
+          height: calc(100% - 44px - 38px);
         }
       }
     }
@@ -120,7 +122,7 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: flex-end;
-      padding: 7px 0;
+      padding: 7px 0 0;
       text-align: end;
 
       .mat-button {
@@ -270,7 +272,7 @@
     display: flex;
     align-items: center;
     place-content: center space-between;
-    padding-top: 7px;
+    padding: 7px 0;
 
     .mat-calendar-heading-period {
       flex: 1 1 100%;
@@ -337,7 +339,7 @@
         color: mat-color($foreground, disabled);
       }
       &-active {
-        color: mat-color($primary);
+        color: var(--primary, mat-color($primary));
         font-size: 26px;
         font-weight: 500;
       }

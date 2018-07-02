@@ -49,7 +49,7 @@
     height: 2%;
     margin: -1%;
     border-radius: 50%;
-    background-color: mat-color($primary);
+    background-color: var(--primary, mat-color($primary));
   }
 
   .mat-clock-hand {
@@ -61,7 +61,7 @@
     width: 1px;
     /*height: $clock-hand-size;*/
     margin: 0 auto;
-    background-color: mat-color($primary);
+    background-color: var(--primary, mat-color($primary));
     transform-origin: bottom;
 
     &::before {
@@ -72,7 +72,7 @@
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background-color: mat-color($primary);
+      background-color: var(--primary, mat-color($primary));
     }
   }
 
@@ -124,7 +124,7 @@
 
     &.mat-clock-cell-selected {
       color: white;
-      background-color: lighten(mat-color($primary), 5);
+      background-color: var(--primary-a80, lighten(mat-color($primary), 5));
     }
   }
 }

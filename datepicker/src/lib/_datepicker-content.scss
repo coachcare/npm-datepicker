@@ -1,8 +1,8 @@
 @mixin mat-datepicker-content($theme) {
   $mat-datepicker-calendar-padding: 8px;
   $mat-datepicker-non-touch-calendar-cell-size: 40px;
-  $mat-datepicker-non-touch-calendar-width: $mat-datepicker-non-touch-calendar-cell-size *
-    7 + $mat-datepicker-calendar-padding * 2;
+  $mat-datepicker-non-touch-calendar-width: $mat-datepicker-non-touch-calendar-cell-size * 7 +
+    $mat-datepicker-calendar-padding * 2;
 
   /**
   * Based on the natural height of the calendar in a month with 6 rows of dates
@@ -28,8 +28,8 @@
   $mat-datepicker-touch-landscape-max-height: 325px;
   $mat-datepicker-touch-landscape-max-header: 150px;
   $mat-datepicker-touch-portrait-max-width: 275px;
-  $mat-datepicker-touch-portrait-max-height: 580px;
-  $mat-datepicker-touch-portrait-max-header: 115px;
+  $mat-datepicker-touch-portrait-max-height: 390px;
+  $mat-datepicker-touch-portrait-max-header: 89px;
 
   .mat-datepicker-content {
     @include mat-elevation(5);

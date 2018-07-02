@@ -61,7 +61,7 @@
     border-style: solid;
 
     transform: scale(0);
-    transition: all 350ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+    transition: all 150ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
 
     /* Choosing a value clearly larger than the height ensures we get the correct capsule shape. */
     border-radius: 999px;
@@ -70,23 +70,24 @@
   /* Square background */
   @media all and (orientation: portrait) {
     .mat-calendar-body-cell-background {
-      top: 50%;
-      left: $mat-calendar-body-cell-content-margin;
-      margin-top: -$mat-calendar-body-cell-content-size / 2;
+      top: $mat-calendar-body-cell-content-margin;
+      left: 50%;
+      margin-left: -$mat-calendar-body-cell-content-size / 3 - 6%;
 
-      padding-bottom: $mat-calendar-body-cell-content-size;
-      width: $mat-calendar-body-cell-content-size;
+      padding-left: $mat-calendar-body-cell-content-size / 3 + 4%;
+      padding-right: $mat-calendar-body-cell-content-size / 3 + 4%;
+      height: $mat-calendar-body-cell-content-size - $mat-calendar-body-cell-content-margin;
     }
   }
   @media all and (orientation: landscape) {
     .mat-calendar-body-cell-background {
-      top: $mat-calendar-body-cell-content-margin;
+      top: $mat-calendar-body-cell-content-margin + 2%;
       left: 50%;
-      margin-left: -$mat-calendar-body-cell-content-size / 3 - 2;
+      margin-left: -$mat-calendar-body-cell-content-size / 3 - 3%;
 
-      padding-left: $mat-calendar-body-cell-content-size / 3;
-      padding-right: $mat-calendar-body-cell-content-size / 3;
-      height: $mat-calendar-body-cell-content-size - $mat-calendar-body-cell-content-margin;
+      padding-left: $mat-calendar-body-cell-content-size / 3 + 1%;
+      padding-right: $mat-calendar-body-cell-content-size / 3 + 1%;
+      height: $mat-calendar-body-cell-content-size - $mat-calendar-body-cell-content-margin - 2%;
     }
   }
 
@@ -99,20 +100,26 @@
     }
   }
 
-  .mat-calendar-body-active,
+  .mat-calendar-body-active .mat-calendar-body-cell-background,
   .mat-calendar-body-selected,
   .mat-calendar-body-today {
     opacity: 1;
     transform: scale(1);
   }
 
-  .mat-calendar-body-selected {
-    background: var(--primary-a80, mat-color($primary, 0.8));
-    color: var(--primary-a80, mat-color($primary, 0.8));
+  .mat-calendar-body-today {
+    color: var(--primary-a60, mat-color($primary, 0.5));
   }
 
   .mat-calendar-body-active:not(.mat-calendar-body-today) {
-    color: var(--primary-a60, mat-color($primary, 0.5));
+    color: var(--primary-a80, mat-color($primary, 0.8));
+  }
+  .mat-calendar-body-selected {
+    background: var(--primary-a80, mat-color($primary, 0.8));
+    color: var(--primary, mat-color($primary));
+  }
+  .mat-calendar-body-selected + span {
+    color: var(--primary-contrast, mat-color($primary, default-contrast, 0.8));
   }
 
   .mat-calendar-body-disabled {

@@ -81,7 +81,7 @@ export class MatCalendarBody {
    * The aspect ratio (width / height) to use for the cells in the table. This aspect ratio will be
    * maintained even as the table resizes.
    */
-  @Input() cellAspectRatio = 0.5;
+  @Input() cellAspectRatio = 0.55;
 
   /** Emits when a new value is selected. */
   @Output() readonly selectedValueChange = new EventEmitter<number>();

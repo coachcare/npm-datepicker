@@ -82,6 +82,7 @@ Also, the primary color can be customized with CSS variables. The required ones 
 
 ```
 body {
+  --bg-dialog: white;
   --primary: rgba(73, 200, 242, 1);
   --primary-contrast: #fff;
   --primary-a60: rgba(73, 200, 242, 0.6);
