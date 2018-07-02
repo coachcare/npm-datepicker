@@ -225,8 +225,8 @@ export class MatDatepicker<D> implements OnInit, OnDestroy {
       minutes = Math.round(minutes / this.clockStep) * this.clockStep;
       this._dateAdapter.setMinutes(valid, minutes);
       this._dateAdapter.setSeconds(valid, 0);
-      this._validSelected = valid;
     }
+    this._validSelected = valid;
   }
   private _validSelected: D | null = null;
 
