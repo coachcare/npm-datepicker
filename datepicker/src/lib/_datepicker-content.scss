@@ -32,7 +32,7 @@
   $mat-datepicker-touch-portrait-max-header: 89px;
 
   .mat-datepicker-content {
-    @include mat-elevation(5);
+    @include _mat-theme-elevation(5, $theme);
 
     display: block;
   }
@@ -47,7 +47,7 @@
   * }
   */
   .mat-datepicker-content-touch {
-    @include mat-elevation(0);
+    @include _mat-theme-elevation(0, $theme);
 
     /* make sure the dialog scrolls rather than being cropped on ludicrously small screens */
     max-height: 90vh;

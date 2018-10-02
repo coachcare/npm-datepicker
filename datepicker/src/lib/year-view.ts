@@ -15,6 +15,7 @@ import {
   PAGE_DOWN,
   PAGE_UP,
   RIGHT_ARROW,
+  SPACE,
   UP_ARROW
 } from '@angular/cdk/keycodes';
 import {
@@ -34,7 +35,7 @@ import { Directionality } from '@angular/cdk/bidi';
 import { MatCalendarBody, MatCalendarCell } from './calendar-body';
 import { MAT_DATE_FORMATS, MatDateFormats } from './core/index';
 import { DateAdapter } from './core/index';
-import { slideCalendar } from './datepicker-animations';
+import { matDatepickerAnimations } from './datepicker-animations';
 import { createMissingDateImplError } from './datepicker-errors';
 
 /**
@@ -45,7 +46,7 @@ import { createMissingDateImplError } from './datepicker-errors';
   selector: 'mat-year-view',
   templateUrl: 'year-view.html',
   exportAs: 'matYearView',
-  animations: [slideCalendar],
+  animations: [matDatepickerAnimations.slideCalendar],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   preserveWhitespaces: false
@@ -58,14 +59,10 @@ export class MatYearView<D> implements AfterContentInit {
   }
   set activeDate(value: D) {
     const oldActiveDate = this._activeDate;
-    const validDate =
-      this._getValidDateOrNull(this._dateAdapter.deserialize(value)) || this._dateAdapter.today();
+    const validDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value)) || this._dateAdapter.today();
     this._activeDate = this._dateAdapter.clampDate(validDate, this.minDate, this.maxDate);
 
-    if (
-      oldActiveDate &&
-      this._dateAdapter.getYear(oldActiveDate) !== this._dateAdapter.getYear(this._activeDate)
-    ) {
+    if (oldActiveDate && this._dateAdapter.getYear(oldActiveDate) !== this._dateAdapter.getYear(this._activeDate)) {
       this._init();
     }
   }
@@ -103,19 +100,24 @@ export class MatYearView<D> implements AfterContentInit {
   private _maxDate: D | null;
 
   /** A function used to filter which dates are selectable. */
-  @Input() dateFilter: (date: D, unit?: string) => boolean;
+  @Input()
+  dateFilter: (date: D, unit?: string) => boolean;
 
   /** Animations handler */
-  @Input() animationDir: string;
+  @Input()
+  animationDir: string;
 
   /** Emits when a new month is selected. */
-  @Output() readonly selectedChange = new EventEmitter<D>();
+  @Output()
+  readonly selectedChange = new EventEmitter<D>();
 
   /** Emits when any date is activated. */
-  @Output() readonly activeDateChange = new EventEmitter<D>();
+  @Output()
+  readonly activeDateChange = new EventEmitter<D>();
 
   /** The body of calendar table */
-  @ViewChild(MatCalendarBody) _matCalendarBody: MatCalendarBody;
+  @ViewChild(MatCalendarBody)
+  _matCalendarBody: MatCalendarBody;
 
   /** Grid of calendar cells representing the months of the year. */
   _months: MatCalendarCell[][];
@@ -202,12 +204,7 @@ export class MatYearView<D> implements AfterContentInit {
       this._dateAdapter.createDate(this._dateAdapter.getYear(this.activeDate), month, 1),
       this._dateFormats.display.monthYearA11yLabel
     );
-    return new MatCalendarCell(
-      month,
-      monthName.toLocaleUpperCase(),
-      ariaLabel,
-      this._shouldEnableMonth(month)
-    );
+    return new MatCalendarCell(month, monthName.toLocaleUpperCase(), ariaLabel, this._shouldEnableMonth(month));
   }
 
   /** Whether the given month is enabled. */
@@ -230,11 +227,7 @@ export class MatYearView<D> implements AfterContentInit {
     const firstOfMonth = this._dateAdapter.createDate(activeYear, month, 1);
 
     // If any date in the month is enabled count the month as enabled.
-    for (
-      let d = firstOfMonth;
-      this._dateAdapter.getMonth(d) == month;
-      d = this._dateAdapter.addCalendarDays(d, 1)
-    ) {
+    for (let d = firstOfMonth; this._dateAdapter.getMonth(d) == month; d = this._dateAdapter.addCalendarDays(d, 1)) {
       if (this.dateFilter(d, 'day')) {
         return true;
       }
@@ -280,6 +273,7 @@ export class MatYearView<D> implements AfterContentInit {
     const oldActiveDate = this._activeDate;
 
     const isRtl = this._isRtl();
+
     switch (event.keyCode) {
       case LEFT_ARROW:
         this.activeDate = this._dateAdapter.addCalendarMonths(this._activeDate, isRtl ? 1 : -1);
@@ -306,18 +300,13 @@ export class MatYearView<D> implements AfterContentInit {
         );
         break;
       case PAGE_UP:
-        this.activeDate = this._dateAdapter.addCalendarYears(
-          this._activeDate,
-          event.altKey ? -10 : -1
-        );
+        this.activeDate = this._dateAdapter.addCalendarYears(this._activeDate, event.altKey ? -10 : -1);
         break;
       case PAGE_DOWN:
-        this.activeDate = this._dateAdapter.addCalendarYears(
-          this._activeDate,
-          event.altKey ? 10 : 1
-        );
+        this.activeDate = this._dateAdapter.addCalendarYears(this._activeDate, event.altKey ? 10 : 1);
         break;
       case ENTER:
+      case SPACE:
         this._monthSelected(this._dateAdapter.getMonth(this._activeDate));
         break;
       default:

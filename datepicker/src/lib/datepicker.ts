@@ -9,13 +9,7 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ESCAPE, UP_ARROW } from '@angular/cdk/keycodes';
-import {
-  Overlay,
-  OverlayConfig,
-  OverlayRef,
-  PositionStrategy,
-  ScrollStrategy
-} from '@angular/cdk/overlay';
+import { Overlay, OverlayConfig, OverlayRef, PositionStrategy, ScrollStrategy } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
 import {
@@ -41,7 +35,7 @@ import { take, filter } from 'rxjs/operators';
 import { merge, Subject, Subscription } from 'rxjs';
 import { MatCalendar, MatCalendarType, MatCalendarView } from './calendar';
 import { DateAdapter } from './core/index';
-import { fadeInCalendar, transformPanel } from './datepicker-animations';
+import { matDatepickerAnimations } from './datepicker-animations';
 import { createMissingDateImplError } from './datepicker-errors';
 import { MatDatepickerInput } from './datepicker-input';
 
@@ -82,7 +76,7 @@ export const MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     '[class.mat-datepicker-content-touch]': 'datepicker.touchUi',
     '(keydown)': '_handleKeydown($event)'
   },
-  animations: [transformPanel, fadeInCalendar],
+  animations: [matDatepickerAnimations.transformPanel, matDatepickerAnimations.fadeInCalendar],
   exportAs: 'matDatepickerContent',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -90,7 +84,8 @@ export const MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 })
 export class MatDatepickerContent<D> implements AfterViewInit {
   /** Reference to the internal calendar component. */
-  @ViewChild(MatCalendar) _calendar: MatCalendar<D>;
+  @ViewChild(MatCalendar)
+  _calendar: MatCalendar<D>;
 
   /** Reference to the datepicker that created the overlay. */
   datepicker: MatDatepicker<D>;
@@ -141,16 +136,20 @@ export class MatDatepicker<D> implements OnInit, OnDestroy {
   private _startAt: D | null;
 
   /** The type of value handled by the calendar. */
-  @Input() type: MatCalendarType = 'date';
+  @Input()
+  type: MatCalendarType = 'date';
 
   /** Which view the calendar should be started in. */
-  @Input() startView: MatCalendarView = 'month';
+  @Input()
+  startView: MatCalendarView = 'month';
 
   /** Clock interval */
-  @Input() clockStep = 1;
+  @Input()
+  clockStep = 1;
 
   /** Clock hour format */
-  @Input() twelveHour = true;
+  @Input()
+  twelveHour = true;
 
   /**
    * Whether the calendar UI is in touch mode. In touch mode the calendar opens in a dialog rather
@@ -168,9 +167,7 @@ export class MatDatepicker<D> implements OnInit, OnDestroy {
   /** Whether the datepicker pop-up should be disabled. */
   @Input()
   get disabled(): boolean {
-    return this._disabled === undefined && this._datepickerInput
-      ? this._datepickerInput.disabled
-      : !!this._disabled;
+    return this._disabled === undefined && this._datepickerInput ? this._datepickerInput.disabled : !!this._disabled;
   }
   set disabled(value: boolean) {
     const newValue = coerceBooleanProperty(value);
@@ -192,13 +189,16 @@ export class MatDatepicker<D> implements OnInit, OnDestroy {
   _datepicker: MatDatepicker<D>;
 
   /** Classes to be passed to the date picker panel. Supports the same syntax as `ngClass`. */
-  @Input() panelClass: string | string[];
+  @Input()
+  panelClass: string | string[];
 
   /** Emits when the datepicker has been opened. */
-  @Output('opened') openedStream: EventEmitter<void> = new EventEmitter<void>();
+  @Output('opened')
+  openedStream: EventEmitter<void> = new EventEmitter<void>();
 
   /** Emits when the datepicker has been closed. */
-  @Output('closed') closedStream: EventEmitter<void> = new EventEmitter<void>();
+  @Output('closed')
+  closedStream: EventEmitter<void> = new EventEmitter<void>();
 
   /** Whether the calendar is open. */
   @Input()
@@ -311,7 +311,7 @@ export class MatDatepicker<D> implements OnInit, OnDestroy {
           this._selected ? this._dateAdapter.getMinutes(this._selected) : 0
         );
         // update the corresponding changes
-        this._select(value);
+        this.select(value);
       });
     }
 
@@ -332,7 +332,7 @@ export class MatDatepicker<D> implements OnInit, OnDestroy {
   }
 
   /** Selects the given date */
-  _select(date: D): void {
+  select(date: D): void {
     const oldValue = this._selected;
     this._selected = date;
     const unit = this.type.indexOf('time') >= 0 ? 'minute' : 'day';
@@ -352,8 +352,7 @@ export class MatDatepicker<D> implements OnInit, OnDestroy {
     this._datepickerInput = input;
     this._inputSubscription = this._datepickerInput._valueChange.subscribe(
       (value: D | null) =>
-        (this._selected =
-          value && this._dateAdapter.isDateInstance(value) ? this._dateAdapter.clone(value) : null)
+        (this._selected = value && this._dateAdapter.isDateInstance(value) ? this._dateAdapter.clone(value) : null)
     );
   }
 
@@ -404,10 +403,7 @@ export class MatDatepicker<D> implements OnInit, OnDestroy {
       }
     };
 
-    if (
-      this._focusedElementBeforeOpen &&
-      typeof this._focusedElementBeforeOpen.focus === 'function'
-    ) {
+    if (this._focusedElementBeforeOpen && typeof this._focusedElementBeforeOpen.focus === 'function') {
       // Because IE moves focus asynchronously, we can't count on it being restored before we've
       // marked the datepicker as closed. If the event fires out of sequence and the element that
       // we're refocusing opens the datepicker on focus, the user could be stuck with not being
@@ -422,6 +418,14 @@ export class MatDatepicker<D> implements OnInit, OnDestroy {
 
   /** Open the calendar as a dialog. */
   private _openAsDialog(): void {
+    // Usually this would be handled by `open` which ensures that we can only have one overlay
+    // open at a time, however since we reset the variables in async handlers some overlays
+    // may slip through if the user opens and closes multiple times in quick succession (e.g.
+    // by holding down the enter key).
+    if (this._dialogRef) {
+      this._dialogRef.close();
+    }
+
     this._dialogRef = this._dialog.open<MatDatepickerContent<D>>(MatDatepickerContent, {
       direction: this._dir ? this._dir.value : 'ltr',
       viewContainerRef: this._viewContainerRef,
@@ -435,10 +439,7 @@ export class MatDatepicker<D> implements OnInit, OnDestroy {
   /** Open the calendar as a popup. */
   private _openAsPopup(): void {
     if (!this._calendarPortal) {
-      this._calendarPortal = new ComponentPortal<MatDatepickerContent<D>>(
-        MatDatepickerContent,
-        this._viewContainerRef
-      );
+      this._calendarPortal = new ComponentPortal<MatDatepickerContent<D>>(MatDatepickerContent, this._viewContainerRef);
     }
 
     if (!this._popupRef) {
@@ -471,6 +472,7 @@ export class MatDatepicker<D> implements OnInit, OnDestroy {
     });
 
     this._popupRef = this._overlay.create(overlayConfig);
+    this._popupRef.overlayElement.setAttribute('role', 'dialog');
 
     merge(
       this._popupRef.backdropClick(),
@@ -478,10 +480,7 @@ export class MatDatepicker<D> implements OnInit, OnDestroy {
       this._popupRef.keydownEvents().pipe(
         filter(event => {
           // Closing on alt + up is only valid when there's an input associated with the datepicker.
-          return (
-            event.keyCode === ESCAPE ||
-            (this._datepickerInput && event.altKey && event.keyCode === UP_ARROW)
-          );
+          return event.keyCode === ESCAPE || (this._datepickerInput && event.altKey && event.keyCode === UP_ARROW);
         })
       )
     ).subscribe(() => this.close());
@@ -491,7 +490,7 @@ export class MatDatepicker<D> implements OnInit, OnDestroy {
   private _createPopupPositionStrategy(): PositionStrategy {
     return this._overlay
       .position()
-      .flexibleConnectedTo(this._datepickerInput.getPopupConnectionElementRef())
+      .flexibleConnectedTo(this._datepickerInput.getConnectedOverlayOrigin())
       .withTransformOriginOn('.mat-datepicker-content')
       .withFlexibleDimensions(false)
       .withViewportMargin(8)

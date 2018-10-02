@@ -90,21 +90,27 @@ export class MatDatepickerInputEvent<D> {
   },
   exportAs: 'matDatepickerInput'
 })
-export class MatDatepickerInput<D>
-  implements AfterContentInit, ControlValueAccessor, OnDestroy, Validator {
+export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAccessor, OnDestroy, Validator {
   /** The datepicker that this input is associated with. */
   @Input()
   set matDatepicker(value: MatDatepicker<D>) {
-    this.registerDatepicker(value);
+    if (!value) {
+      return;
+    }
+
+    this._datepicker = value;
+    this._datepicker._registerInput(this);
+    this._datepickerSubscription.unsubscribe();
+
+    this._datepickerSubscription = this._datepicker._selectedChanged.subscribe((selected: D) => {
+      this.value = selected;
+      this._cvaOnChange(selected);
+      this._onTouched();
+      this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+      this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+    });
   }
   _datepicker: MatDatepicker<D>;
-
-  private registerDatepicker(value: MatDatepicker<D>) {
-    if (value) {
-      this._datepicker = value;
-      this._datepicker._registerInput(this);
-    }
-  }
 
   /** Function that can be used to filter out dates within the datepicker. */
   @Input()
@@ -182,10 +188,12 @@ export class MatDatepickerInput<D>
   private _disabled: boolean;
 
   /** Emits when a `change` event is fired on this `<input>`. */
-  @Output() readonly dateChange = new EventEmitter<MatDatepickerInputEvent<D>>();
+  @Output()
+  readonly dateChange = new EventEmitter<MatDatepickerInputEvent<D>>();
 
   /** Emits when an `input` event is fired on this `<input>`. */
-  @Output() readonly dateInput = new EventEmitter<MatDatepickerInputEvent<D>>();
+  @Output()
+  readonly dateInput = new EventEmitter<MatDatepickerInputEvent<D>>();
 
   /** Emits when the value changes (either due to user input or programmatic change). */
   _valueChange = new EventEmitter<D | null>();
@@ -205,9 +213,7 @@ export class MatDatepickerInput<D>
 
   /** The form control validator for whether the input parses. */
   private _parseValidator: ValidatorFn = (): ValidationErrors | null => {
-    return this._lastValueValid
-      ? null
-      : { matDatepickerParse: { text: this._elementRef.nativeElement.value } };
+    return this._lastValueValid ? null : { matDatepickerParse: { text: this._elementRef.nativeElement.value } };
   };
 
   /** The form control validator for the min date. */
@@ -229,9 +235,7 @@ export class MatDatepickerInput<D>
   /** The form control validator for the date filter. */
   private _filterValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
-    return !this._dateFilter || !controlValue || this._dateFilter(controlValue)
-      ? null
-      : { matDatepickerFilter: true };
+    return !this._dateFilter || !controlValue || this._dateFilter(controlValue) ? null : { matDatepickerFilter: true };
   };
 
   /** The combined form control validator for this input. */
@@ -246,7 +250,7 @@ export class MatDatepickerInput<D>
   private _lastValueValid = false;
 
   constructor(
-    private _elementRef: ElementRef,
+    private _elementRef: ElementRef<HTMLInputElement>,
     @Optional() public _dateAdapter: DateAdapter<D>,
     @Optional()
     @Inject(MAT_DATE_FORMATS)
@@ -266,16 +270,6 @@ export class MatDatepickerInput<D>
     this._localeSubscription = this._dateAdapter.localeChanges.subscribe(() => {
       this.value = this.value;
     });
-
-    if (this._datepicker) {
-      this._datepickerSubscription = this._datepicker._selectedChanged.subscribe((selected: D) => {
-        this.value = selected;
-        this._cvaOnChange(selected);
-        this._onTouched();
-        this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
-        this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
-      });
-    }
   }
 
   ngOnDestroy() {
@@ -300,7 +294,7 @@ export class MatDatepickerInput<D>
 
   /**
    * @deprecated
-   * @deletion-target 7.0.0 Use `getConnectedOverlayOrigin` instead
+   * @breaking-change 7.0.0 Use `getConnectedOverlayOrigin` instead
    */
   getPopupConnectionElementRef(): ElementRef {
     return this.getConnectedOverlayOrigin();
@@ -338,7 +332,9 @@ export class MatDatepickerInput<D>
   }
 
   _onKeydown(event: KeyboardEvent) {
-    if (event.altKey && event.keyCode === DOWN_ARROW) {
+    const isAltDownArrow = event.altKey && event.keyCode === DOWN_ARROW;
+
+    if (this._datepicker && isAltDownArrow && !this._elementRef.nativeElement.readOnly) {
       this._datepicker.open();
       event.preventDefault();
     }

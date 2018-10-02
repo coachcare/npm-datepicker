@@ -29,6 +29,7 @@ import { DateAdapter } from './core/index';
 import { createMissingDateImplError } from './datepicker-errors';
 
 const YEAR_LINE_HEIGHT = 35;
+const YEAR_SIZE = 40;
 
 /**
  * An internal component used to display a year selector in the datepicker.
@@ -50,14 +51,10 @@ export class MatYearsView<D> implements AfterContentInit, OnDestroy {
   }
   set activeDate(value: D) {
     let oldActiveDate = this._activeDate;
-    const validDate =
-      this._getValidDateOrNull(this._dateAdapter.deserialize(value)) || this._dateAdapter.today();
+    const validDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value)) || this._dateAdapter.today();
     this._activeDate = this._dateAdapter.clampDate(validDate, this.minDate, this.maxDate);
 
-    if (
-      oldActiveDate &&
-      this._dateAdapter.getYear(oldActiveDate) != this._dateAdapter.getYear(this._activeDate)
-    ) {
+    if (oldActiveDate && this._dateAdapter.getYear(oldActiveDate) != this._dateAdapter.getYear(this._activeDate)) {
       this._init();
     }
   }
@@ -95,10 +92,12 @@ export class MatYearsView<D> implements AfterContentInit, OnDestroy {
   private _maxDate: D | null;
 
   /** A function used to filter which dates are selectable. */
-  @Input() dateFilter: (date: D, unit?: string) => boolean;
+  @Input()
+  dateFilter: (date: D, unit?: string) => boolean;
 
   /** Emits when a new month is selected. */
-  @Output() readonly selectedChange = new EventEmitter<D>();
+  @Output()
+  readonly selectedChange = new EventEmitter<D>();
 
   /** List of years. */
   _years: Array<{ value: number; enabled: boolean }> = [];
@@ -128,7 +127,10 @@ export class MatYearsView<D> implements AfterContentInit, OnDestroy {
   ngAfterContentInit() {
     const lastPosition = { scrolled: 0 };
     this._disposeScroller = fromEvent(this.element.nativeElement, 'scroll')
-      .pipe(sampleTime(300), mergeMap((ev: any) => obsOf(this._calculatePoints())))
+      .pipe(
+        sampleTime(300),
+        mergeMap((ev: any) => obsOf(this._calculatePoints()))
+      )
       .subscribe((pos: any) => this._handleScroll(pos, lastPosition));
 
     this._init();
@@ -163,16 +165,12 @@ export class MatYearsView<D> implements AfterContentInit, OnDestroy {
     this._populateYears();
 
     setTimeout(() => {
-      this.element.nativeElement.scrollTop -=
-        this.element.nativeElement.offsetHeight / 2 - YEAR_LINE_HEIGHT / 2;
+      this.element.nativeElement.scrollTop -= this.element.nativeElement.offsetHeight / 2 - YEAR_LINE_HEIGHT / 2;
     }, 20);
   }
 
   _populateYears(down = false) {
-    if (
-      (!down && !this._years[0].enabled) ||
-      (down && !this._years[this._years.length - 1].enabled)
-    ) {
+    if ((!down && !this._years[0].enabled) || (down && !this._years[this._years.length - 1].enabled)) {
       return;
     }
 
@@ -182,28 +180,16 @@ export class MatYearsView<D> implements AfterContentInit, OnDestroy {
     const selectedMinutes = this._dateAdapter.getMinutes(this.activeDate);
 
     let scroll = 0;
-    for (let y = 1; y <= 10; y++) {
+    for (let y = 1; y <= YEAR_SIZE / 2; y++) {
       let year = this._years[this._years.length - 1].value;
-      let date = this._dateAdapter.createDate(
-        year + 1,
-        selectedMonth,
-        selectedDay,
-        selectedHours,
-        selectedMinutes
-      );
+      let date = this._dateAdapter.createDate(year + 1, selectedMonth, selectedDay, selectedHours, selectedMinutes);
       this._years.push({
         value: year + 1,
         enabled: !this.dateFilter || this.dateFilter(date, 'minute')
       });
 
       year = this._years[0].value;
-      date = this._dateAdapter.createDate(
-        year - 1,
-        selectedMonth,
-        selectedDay,
-        selectedHours,
-        selectedMinutes
-      );
+      date = this._dateAdapter.createDate(year - 1, selectedMonth, selectedDay, selectedHours, selectedMinutes);
       this._years.unshift({
         value: year - 1,
         enabled: !this.dateFilter || this.dateFilter(date, 'minute')

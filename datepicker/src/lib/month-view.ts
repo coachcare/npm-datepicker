@@ -15,6 +15,7 @@ import {
   PAGE_DOWN,
   PAGE_UP,
   RIGHT_ARROW,
+  SPACE,
   UP_ARROW
 } from '@angular/cdk/keycodes';
 import {
@@ -34,7 +35,7 @@ import { Directionality } from '@angular/cdk/bidi';
 import { MatCalendarBody, MatCalendarCell } from './calendar-body';
 import { MAT_DATE_FORMATS, MatDateFormats } from './core/index';
 import { DateAdapter } from './core/index';
-import { slideCalendar } from './datepicker-animations';
+import { matDatepickerAnimations } from './datepicker-animations';
 import { createMissingDateImplError } from './datepicker-errors';
 
 const DAYS_PER_WEEK = 7;
@@ -47,7 +48,7 @@ const DAYS_PER_WEEK = 7;
   selector: 'mat-month-view',
   templateUrl: 'month-view.html',
   exportAs: 'matMonthView',
-  animations: [slideCalendar],
+  animations: [matDatepickerAnimations.slideCalendar],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   preserveWhitespaces: false
@@ -104,22 +105,28 @@ export class MatMonthView<D> implements AfterContentInit {
   private _maxDate: D | null;
 
   /** A function used to filter which dates are selectable. */
-  @Input() dateFilter: (date: D, unit?: string) => boolean;
+  @Input()
+  dateFilter: (date: D, unit?: string) => boolean;
 
   /** Animations handler */
-  @Input() animationDir: string;
+  @Input()
+  animationDir: string;
 
   /** Emits when a new date is selected. */
-  @Output() readonly selectedChange = new EventEmitter<D | null>();
+  @Output()
+  readonly selectedChange = new EventEmitter<D | null>();
 
   /** Emits when any date is selected. */
-  @Output() readonly _userSelection = new EventEmitter<void>();
+  @Output()
+  readonly _userSelection = new EventEmitter<void>();
 
   /** Emits when any date is activated. */
-  @Output() readonly activeDateChange = new EventEmitter<D>();
+  @Output()
+  readonly activeDateChange = new EventEmitter<D>();
 
   /** The body of calendar table */
-  @ViewChild(MatCalendarBody) _matCalendarBody: MatCalendarBody;
+  @ViewChild(MatCalendarBody)
+  _matCalendarBody: MatCalendarBody;
 
   /** The label for this month (e.g. "January 2017"). */
   _monthLabel: string;
@@ -205,6 +212,7 @@ export class MatMonthView<D> implements AfterContentInit {
     const oldActiveDate = this._activeDate;
 
     const isRtl = this._isRtl();
+
     switch (event.keyCode) {
       case LEFT_ARROW:
         this.activeDate = this._dateAdapter.addCalendarDays(this._activeDate, isRtl ? 1 : -1);
@@ -241,6 +249,7 @@ export class MatMonthView<D> implements AfterContentInit {
           : this._dateAdapter.addCalendarMonths(this._activeDate, 1);
         break;
       case ENTER:
+      case SPACE:
         if (!this.dateFilter || this.dateFilter(this._activeDate)) {
           this._dateSelected(this._dateAdapter.getDate(this._activeDate));
           this._userSelection.emit();
