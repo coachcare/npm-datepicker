@@ -21,7 +21,7 @@ The `mat-datepicker` has the following _input_ parameters:
 - `startAt`: start Date/Moment, otherwise the current selected value
 - `type`: `date | datetime | time` output type and available views. default: date
 - `startView`: `clock | month | year | years` initial view to load. default: month
-- `clockStep`: interval to use in the clock view. defailt: 1
+- `clockStep`: interval to use in the clock view. default: 1
 - `twelveHour`: whether to use 12 or 24 hrs format. default: false
 - `touchUi`: calendar UI mode. default: true (recommended)
 - `disabled`: whether the datepicker pop-up should be disabled
