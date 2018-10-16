@@ -35,7 +35,7 @@ and the `input[matDatepicker]` has the _output_:
 ## Installation
 
 As usual run `yarn add @coachcare/datepicker` or `npm install @coachcare/datepicker`.  
-This module requires `moment` and `moment-timezome` for the MomentDateAdapter.
+This module requires `moment` and `moment-timezone` for the MomentDateAdapter.
 
 Now add the modules to your Angular Module:
 
