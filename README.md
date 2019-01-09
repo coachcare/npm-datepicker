@@ -115,9 +115,4 @@ so please check [this file](https://github.com/selvera/npm-datepicker/blob/maste
 <mat-datepicker type="time" clockStep="5" #timeStart></mat-datepicker>
 ```
 
-## Contribute
-
-Feedback and suggestions are welcome, also gratitude demonstrations :)
-https://www.paypal.me/mateotp
-
 Enjoy!
