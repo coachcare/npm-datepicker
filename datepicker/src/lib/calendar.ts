@@ -136,6 +136,14 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnCha
   @Input()
   twelveHour = false;
 
+  /** Text for the 'submit' button. */
+  @Input()
+  buttonSubmitText: string = 'Ok';
+
+  /** Text for the 'cancel' button. */
+  @Input()
+  buttonCancelText: string = 'Cancel';
+
   /** Emits when the currently selected date changes. */
   @Output()
   selectedChange = new EventEmitter<D>();

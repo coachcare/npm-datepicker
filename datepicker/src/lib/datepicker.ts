@@ -151,6 +151,14 @@ export class MatDatepicker<D> implements OnInit, OnDestroy {
   @Input()
   twelveHour = true;
 
+  /** Text for the 'submit' button. */
+  @Input()
+  buttonSubmitText: string = 'Ok';
+
+  /** Text for the 'cancel' button. */
+  @Input()
+  buttonCancelText: string = 'Cancel';
+
   /**
    * Whether the calendar UI is in touch mode. In touch mode the calendar opens in a dialog rather
    * than a popup and elements have more padding to allow for bigger touch targets.
