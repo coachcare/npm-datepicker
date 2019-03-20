@@ -151,6 +151,9 @@ export class MatDatepicker<D> implements OnInit, OnDestroy {
   @Input()
   twelveHour = true;
 
+  @Input()
+  color?: string;
+
   /** Text for the 'submit' button. */
   @Input()
   buttonSubmitText: string = 'Ok';
