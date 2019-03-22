@@ -16,27 +16,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCalendar } from './calendar';
 import { MatCalendarBody } from './calendar-body';
 import { MatClockView } from './clock-view';
-import {
-  MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER,
-  MatDatepicker,
-  MatDatepickerContent
-} from './datepicker';
+import { MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER, MatDatepicker, MatDatepickerContent } from './datepicker';
 import { MatDatepickerInput } from './datepicker-input';
-import { MatDatepickerIntl } from './datepicker-intl';
 import { MatDatepickerToggle, MatDatepickerToggleIcon } from './datepicker-toggle';
 import { MatMonthView } from './month-view';
 import { MatYearView } from './year-view';
 import { MatYearsView } from './years-view';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    MatButtonModule,
-    MatDialogModule,
-    MatIconModule,
-    OverlayModule,
-    A11yModule
-  ],
+  imports: [CommonModule, MatButtonModule, MatDialogModule, MatIconModule, OverlayModule, A11yModule],
   exports: [
     MatCalendar,
     MatCalendarBody,
@@ -63,7 +51,7 @@ import { MatYearsView } from './years-view';
     MatYearView,
     MatYearsView
   ],
-  providers: [MatDatepickerIntl, MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER],
+  providers: [MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER],
   entryComponents: [MatDatepickerContent]
 })
 export class MatDatepickerModule {}
