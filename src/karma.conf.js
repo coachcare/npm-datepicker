@@ -16,26 +16,17 @@ module.exports = function (config) {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
     coverageIstanbulReporter: {
-      dir: require('path').join(__dirname, '../../coverage'),
-      reports: ['html', 'lcovonly'],
+      dir: require('path').join(__dirname, '../coverage/ng-mat-datetime-picker'),
+      reports: ['html', 'lcovonly', 'text-summary'],
       fixWebpackSourcePaths: true
     },
     reporters: ['progress', 'kjhtml'],
     port: 9876,
     colors: true,
-    logLevel: config.LOG_DEBUG,
-    mime: {
-      'text/x-typescript': ['ts', 'tsx']
-    },
-    customLaunchers: {
-      ChromeHeadless: {
-        base: 'Chrome',
-        flags: ['--no-sandbox'],
-        debug: true
-      }
-    },
+    logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['ChromeHeadless'],
-    singleRun: false
+    browsers: ['Chrome'],
+    singleRun: false,
+    restartOnFileChange: true
   });
 };
