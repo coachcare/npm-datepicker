@@ -82,7 +82,7 @@ export class MatDatepickerInputEvent<D> {
     '[attr.aria-owns]': '(_datepicker?.opened && _datepicker.id) || null',
     '[attr.min]': 'min ? _dateAdapter.toIso8601(min) : null',
     '[attr.max]': 'max ? _dateAdapter.toIso8601(max) : null',
-    '[attr.disabled]': 'disabled',
+    '[attr.disabled]': 'disabled ? "disabled" : null',
     '(input)': '_onInput($event.target.value)',
     '(change)': '_onChange()',
     '(blur)': '_onBlur()',
